@@ -1,0 +1,51 @@
+{
+  "name": "fnerdwq-omd",
+  "version": "0.0.1",
+  "author": "Frederik Wagner",
+  "summary": "This module install the Open Monitoring Distribution (Check_MK / Nagios)",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/fnerdwq/puppet-omd.git",
+  "project_page": "https://github.com/fnerdwq/puppet-omd",
+  "issues_url": "https://github.com/fnerdwq/puppet-omd/issues",
+  "description": "Modul installing the Open Monitoring Distribution OMD",
+  "tags": [
+    "nagios",
+    "omd",
+    "check_mk",
+    "check-mk",
+    "monitoring"
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 2.7.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "10.04",
+        "12.04",
+        "14.04"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 3.2.1"
+    },
+    {
+      "name": "puppetlabs/apt",
+      "version_requirement": ">= 1.5.0"
+    }
+  ]
+}

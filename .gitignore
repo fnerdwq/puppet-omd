@@ -1,0 +1,12 @@
+*~
+*.swp
+*.swo
+*.bak
+.rvmrc
+.ruby-*
+.bundle/
+vendor/
+Gemfile.lock
+coverage/
+spec/fixtures/*
+.vagrant
