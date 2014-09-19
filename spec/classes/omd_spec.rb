@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe 'omd' do
 
-  # default is Debian environment
+  #################################
+  # default is Debian environment #
+  #################################
 
   it { is_expected.to contain_class('omd::params') }
   it { is_expected.to contain_class('omd::install') }
@@ -10,17 +12,35 @@ describe 'omd' do
   describe 'installation' do
 
     context 'on RedHat like systems' do
-      let(:facts) {{ 
+      facts = {
           :osfamily        => 'RedHat',
           :operatingsystem => 'CentOS',
-      }}
-  
-      #it { is_expected.to contain_class('omd::install::redhat').that_comes_before('Package[omd]') }
-      it { is_expected.to raise_error(/not supported/) }
+      }
+      let(:facts) { facts.merge({ :operatingsystemmajrelease => '6', }) }
+
+      it { is_expected.to contain_class('omd::install::redhat').that_comes_before('Package[omd]') }
+      it { is_expected.to contain_class('epel') }
+
+      it do 
+        is_expected.to contain_package('omd-repository').with({
+          :name     => 'labs-consol-stable',
+          :source   => 'https://labs.consol.de/repo/stable/rhel6/i386/labs-consol-stable.rhel6.noarch.rpm',
+          :provider => 'rpm',
+        })
+      end
+      context 'on RHEL7' do
+        let(:facts) { facts.merge({ :operatingsystemmajrelease => '7', }) }
+        it do
+          is_expected.to contain_package('omd-repository').with({
+            :name     => 'labs-consol-stable',
+            :source   => 'https://labs.consol.de/repo/stable/rhel7/i386/labs-consol-stable.rhel7.noarch.rpm',
+            :provider => 'rpm',
+          })
+        end
+      end
     end
 
     context 'on Debian like systems' do
-  
       it { is_expected.to contain_class('omd::install::debian').that_comes_before('Package[omd]') }
       it { is_expected.to contain_class('apt') }
 

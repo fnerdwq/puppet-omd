@@ -47,5 +47,9 @@
       "name": "puppetlabs/apt",
       "version_requirement": ">= 1.5.0"
     }
+    {
+      "name": "stahnma/epel",
+      "version_requirement": ">= 1.0.0"
+    }
   ]
 }
