@@ -20,8 +20,8 @@
 #   defaults to _unde
 #
 # [*service_ensure*]
-#   State of the site started/stopped.
-#   defaults to _started_
+#   State of the site /stopped.
+#   defaults to _running_
 #
 # [*service_reload*]
 #   Site reload or restart on trigger.
@@ -43,7 +43,7 @@ define omd::site (
   $ensure         = 'present',
   $uid            = undef,
   $gid            = undef,
-  $service_ensure = 'started',
+  $service_ensure = 'running',
   $service_reload = false,
 ) {
   validate_re($ensure, '^present|absent$')

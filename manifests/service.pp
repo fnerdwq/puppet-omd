@@ -3,7 +3,7 @@ define omd::service (
   $ensure,
   $reload,
 ) {
-  validate_re($ensure, '^started|stopped$')
+  validate_re($ensure, '^running|stopped$')
   validate_bool($reload)
 
   Exec {
@@ -11,7 +11,7 @@ define omd::service (
   }
 
 
-  if $ensure == 'started' {
+  if $ensure == 'running' {
 
     exec { "start omd site: ${name}":
       command => "omd start ${name}",

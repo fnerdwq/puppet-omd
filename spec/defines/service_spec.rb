@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'omd::service' do
     let(:title) { 'default' }
     let(:default_params) {{ 
-      :ensure => 'started',
+      :ensure => 'running',
       :reload => false,
     }}
     let(:params) { default_params }
