@@ -10,7 +10,7 @@ branches:
     - master
 env:
   - PUPPET_VERSION=3.4.3
-  - PUPPET_VERSION=3.6.2
+  - PUPPET_VERSION=3.7.1
 matrix:
   fast_finish: true
   include:
