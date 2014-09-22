@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'omd::service' do
+describe 'omd::site::service' do
     let(:title) { 'default' }
     let(:default_params) {{ 
       :ensure => 'running',
@@ -8,7 +8,7 @@ describe 'omd::service' do
     }}
     let(:params) { default_params }
 
-    it { is_expected.to contain_omd__service('default') }
+    it { is_expected.to contain_omd__site__service('default') }
  
 # enable => _true/ false  - omd enable/disable
     it do

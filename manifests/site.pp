@@ -68,10 +68,10 @@ define omd::site (
     exec { "create omd site: ${name}":
       command => "omd create ${_uid}${_gid}${name}",
       unless  => "omd sites -b | grep -q '\\<${name}\\>'",
-      before  => Omd::Service[$name],
+      before  => Omd::Site::Service[$name],
     }
   
-    omd::service{ $name:
+    omd::site::service{ $name:
       ensure => $service_ensure,
       reload => $service_reload,
     }

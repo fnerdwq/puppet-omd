@@ -54,7 +54,7 @@ describe 'omd::site' do
     end
 
     it do
-      is_expected.to contain_omd__service('default').with({
+      is_expected.to contain_omd__site__service('default').with({
         :ensure => 'running',
         :reload => false,
       }).that_requires('Exec[create omd site: default]')
@@ -66,7 +66,7 @@ describe 'omd::site' do
         :service_reload => true,
       }}
       it do
-        is_expected.to contain_omd__service('othersite').with({
+        is_expected.to contain_omd__site__service('othersite').with({
           :ensure => 'stopped',
           :reload => true,
         }).that_requires('Exec[create omd site: othersite]')

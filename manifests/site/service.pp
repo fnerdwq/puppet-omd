@@ -1,5 +1,5 @@
-# (private) omd::service resource
-define omd::service (
+# (private) omd::site::service resource
+define omd::site::service (
   $ensure,
   $reload,
 ) {
