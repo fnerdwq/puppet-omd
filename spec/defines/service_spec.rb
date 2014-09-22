@@ -23,6 +23,7 @@ describe 'omd::service' do
     it do
       is_expected.to contain_exec('restart omd site: default').with({
         :command     => 'omd restart default',
+        :onlyif      => 'omd status -b default',
         :refreshonly => true,
         :path        => ['/bin', '/usr/bin'],
       })

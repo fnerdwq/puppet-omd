@@ -13,20 +13,24 @@ define omd::service (
 
   if $ensure == 'running' {
 
+    $restart_cmd =  $reload ? {
+      true    => 'reload',
+      default => 'restart',
+    }
+    # only restart when started (otherwise exec 'start', starts)
+    exec { "${restart_cmd} omd site: ${name}":
+      command     => "omd ${restart_cmd} ${name}",
+      onlyif      => "omd status -b ${name}",
+      refreshonly => true,
+    }
+
+    # restart, in case 
     exec { "start omd site: ${name}":
       command => "omd start ${name}",
       unless  => "omd status -b ${name}",
       returns => [0, 2],
     }
 
-    $restart_cmd =  $reload ? {
-      true    => 'reload',
-      default => 'restart',
-    }
-    exec { "${restart_cmd} omd site: ${name}":
-      command     => "omd ${restart_cmd} ${name}",
-      refreshonly => true,
-    }
 
   } else {
 
