@@ -37,5 +37,9 @@ describe 'omd::site' do
       it { is_expected.to raise_error(/does not match/) }
     end
 
+    it do
+      is_expected.to contain_omd__service('default').with({ })
+    end
+
 
 end

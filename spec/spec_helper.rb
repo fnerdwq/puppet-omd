@@ -1,10 +1,10 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
 
 # coverage test at the end
-at_exit { RSpec::Puppet::Coverage.report! }
+#at_exit { RSpec::Puppet::Coverage.report! }
 
 RSpec.configure do |c|
-  c.formatter = :documentation
+#  c.formatter = :documentation
 
   c.default_facts = {
     :kernel          => 'Linux',
