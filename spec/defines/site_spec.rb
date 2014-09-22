@@ -4,7 +4,6 @@ describe 'omd::site' do
     let(:title) { 'default' }
 
     it { is_expected.to contain_omd__site('default') }
-
     it { is_expected.to contain_class('omd') }
 
     it do
@@ -13,6 +12,23 @@ describe 'omd::site' do
         :unless   => 'omd sites -b | grep -q \'\\<default\\>\'',
         :path     => ['/bin', '/usr/bin'],
       })
+    end
+
+    context 'for \'othersite\' with parameter ensure => absent' do
+      let(:title)  { 'othersite' }
+      let(:params) {{ 
+        :ensure => 'absent',
+      }}
+      it do
+        is_expected.to contain_exec('remove omd site: othersite').with({
+          :command  => 'yes yes | omd rm --kill othersite',
+          :onlyif   => 'omd sites -b | grep -q \'\\<othersite\\>\'',
+        })
+      end
+    end
+    context 'with parameter ensure => breakme' do
+      let(:params) {{ :ensure => 'breakme' }}
+      it { is_expected.to raise_error(/does not match/) }
     end
 
     context 'with parameter uid => 678' do
@@ -40,6 +56,7 @@ describe 'omd::site' do
     it do
       is_expected.to contain_omd__service('default').with({ })
     end
+
 
 
 end
