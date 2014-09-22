@@ -11,4 +11,6 @@ class omd::install::redhat {
     source   => "https://labs.consol.de/repo/${omd::repo}/${rhel_ver}/i386/labs-consol-${omd::repo}.${rhel_ver}.noarch.rpm",
     provider => rpm,
   }
+ 
+  $default_pkg_name ='omd'
 }

@@ -13,7 +13,9 @@ class omd::install {
     }
     default:    { 
       $pkg_ensure = $omd::ensure
-      $pkg_name   = 'omd'
+      # inline template, as long as lookup() only in future_parser (or in module hiera?)
+      # take default_pkg_name set in osfamily specific class
+      $pkg_name   = inline_template('<%= scope[@install_class + "::default_pkg_name"] -%>')
     }
   }
 

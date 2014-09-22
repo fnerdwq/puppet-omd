@@ -49,6 +49,7 @@ describe 'omd' do
             :source => /labs\.consol\.de\/repo\/testing\/.*labs-consol-testing/,
           })
         end
+        it { is_expected.to contain_package('omd').with_name('omd') }
       end
 
     end
@@ -91,6 +92,7 @@ describe 'omd' do
         it do
           is_expected.to contain_apt__source('omd').with_location(/labs\.consol\.de\/repo\/testing\//)
         end
+        it { is_expected.to contain_package('omd').with_name('omd-daily') }
       end
 
     end
@@ -115,7 +117,6 @@ describe 'omd' do
       let(:params) {{ :repo => 'breakme' }}
       it { is_expected.to raise_error(/does not match/) }
     end
-
 
   end
 

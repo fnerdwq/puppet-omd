@@ -15,5 +15,9 @@ class omd::install::debian {
     include_src => false,
   }
 
+  $default_pkg_name = $omd::repo ? {
+    /testing/ => 'omd-daily',
+    default   => 'omd',
+  }
 
 }
