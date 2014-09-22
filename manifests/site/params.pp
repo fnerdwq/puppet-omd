@@ -1,0 +1,11 @@
+# (private) site default variables
+class omd::site::params {
+
+  $allowed_options =  ['APACHE_MODE', 'APACHE_TCP_ADDR', 'APACHE_TCP_PORT',
+    'AUTOSTART', 'CORE', 'CRONTAB', 'DEFAULT_GUI', 'DOKUWIKI_AUTH',
+    'LIVESTATUS_TCP', 'MKEVENTD', 'MOD_GEARMAN', 'MONGODB', 'MULTISITE_AUTHORISATION',
+    'MULTISITE_COOKIE_AUTH', 'MYSQL', 'NAGIOS_THEME', 'NAGVIS_URLS', 'NSCA',
+    'PNP4NAGIOS', 'THRUK_COOKIE_AUTH', 'TMPFS' ]
+
+
+}
