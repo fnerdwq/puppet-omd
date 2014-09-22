@@ -28,6 +28,7 @@ describe 'omd' do
           :provider => 'rpm',
         })
       end
+
       context 'on RHEL7' do
         let(:facts) { facts.merge({ :operatingsystemmajrelease => '7', }) }
         it do
@@ -38,6 +39,18 @@ describe 'omd' do
           })
         end
       end
+
+      context 'with parameter repo => testing' do
+        let(:params) {{ :repo => 'testing' }}
+            
+        it do
+          is_expected.to contain_package('omd-repository').with({
+            :name   => 'labs-consol-testing',
+            :source => /labs\.consol\.de\/repo\/testing\/.*labs-consol-testing/,
+          })
+        end
+      end
+
     end
 
     context 'on Debian like systems' do
@@ -73,6 +86,13 @@ describe 'omd' do
         }
       end
 
+      context 'with parameter repo => testing' do
+        let(:params) {{ :repo => 'testing' }}
+        it do
+          is_expected.to contain_apt__source('omd').with_location(/labs\.consol\.de\/repo\/testing\//)
+        end
+      end
+
     end
 
     it { is_expected.to contain_package('omd').with_ensure('installed') }
@@ -88,6 +108,11 @@ describe 'omd' do
     end
     context 'with parameter ensure => breakme' do
       let(:params) {{ :ensure => 'breakme' }}
+      it { is_expected.to raise_error(/does not match/) }
+    end
+
+    context 'with parameter testing => testing' do
+      let(:params) {{ :repo => 'breakme' }}
       it { is_expected.to raise_error(/does not match/) }
     end
 

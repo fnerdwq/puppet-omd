@@ -8,7 +8,12 @@
 # === Parameters
 #
 # [*ensure*]
-#   Version of
+#   Ensure parameter. Common package 'ensure' or version.
+#   defaults to _installed_
+#
+# [*repo*]
+#   Which repo to use stable/testing
+#   defaults to _stable_
 #
 # === Examples
 #
@@ -24,10 +29,12 @@
 #
 class omd (
   $ensure = $omd::params::ensure,
+  $repo   = $omd::params::repo,
 ) inherits omd::params {
   validate_re($ensure, ['^installed|latest|absent|purged$', 
                         '^\d\.\d\d$'])
+  validate_re($repo, '^stable|testing$')
 
-  class {'omd::install': }
+  contain 'omd::install'
 
 }

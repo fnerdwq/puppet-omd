@@ -5,7 +5,7 @@ class omd::install::debian {
 
   $os = downcase($::operatingsystem)
   apt::source { 'omd':
-    location    => "http://labs.consol.de/repo/stable/${os}",
+    location    => "http://labs.consol.de/repo/${omd::repo}/${os}",
     release     => $::lsbdistcodename,
     repos       => 'main',
     key         => 'F8C1CA08A57B9ED7',

@@ -2,5 +2,6 @@
 class omd::params {
 
   $ensure = 'installed'
+  $repo   = 'stable'
 
 }
