@@ -120,5 +120,4 @@ describe 'omd' do
 
   end
 
-
 end
