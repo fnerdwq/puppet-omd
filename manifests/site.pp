@@ -27,6 +27,10 @@
 #   Site reload or restart on trigger.
 #   defaults to _false_
 #
+# [*options*]
+#   Site configuration hash, e.g. { 'DEFAULT_GUI' => 'check_mk' , ... }
+#   defaults to _undef_
+#
 # === Examples
 #
 # omd::site { 'default': }
@@ -45,6 +49,7 @@ define omd::site (
   $gid            = undef,
   $service_ensure = 'running',
   $service_reload = false,
+  $options        = undef,
 ) {
   validate_re($ensure, '^present|absent$')
   if $uid {
@@ -56,6 +61,7 @@ define omd::site (
     $_gid = "--gid ${gid} "
   }
   # $service_* validation in omd::service
+  # $options_* validation in omd::config
 
   require omd
 
@@ -68,12 +74,20 @@ define omd::site (
     exec { "create omd site: ${name}":
       command => "omd create ${_uid}${_gid}${name}",
       unless  => "omd sites -b | grep -q '\\<${name}\\>'",
-      before  => Omd::Site::Service[$name],
     }
-  
-    omd::site::service{ $name:
+
+    omd::site::service { $name:
       ensure => $service_ensure,
       reload => $service_reload,
+    }
+
+    if $options {
+      Exec["create omd site: ${name}"] ->
+      omd::site::config { $name: options => $options } ~>
+      Omd::Site::Service[$name]
+    } else {
+      Exec["create omd site: ${name}"] ~>
+      Omd::Site::Service[$name]
     }
 
   } else {
