@@ -11,7 +11,7 @@ class omd::install {
       $pkg_ensure = 'present'
       $pkg_name   = "omd-${omd::ensure}"
     }
-    default:    { 
+    default:    {
       $pkg_ensure = $omd::ensure
       # inline template, as long as lookup() only in future_parser (or in module hiera?)
       # take default_pkg_name set in osfamily specific class
@@ -20,10 +20,10 @@ class omd::install {
   }
 
   package { 'omd':
-    ensure  => $pkg_ensure,
-    name    => $pkg_name,
-    require => Class[$install_class]
+    ensure        => $pkg_ensure,
+    name          => $pkg_name,
+    allow_virtual => true,
+    require       => Class[$install_class]
   }
-
 
 }

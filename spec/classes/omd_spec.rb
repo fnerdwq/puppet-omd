@@ -49,7 +49,7 @@ describe 'omd' do
             :source => /labs\.consol\.de\/repo\/testing\/.*labs-consol-testing/,
           })
         end
-        it { is_expected.to contain_package('omd').with_name('omd') }
+        it { is_expected.to contain_package('omd').with_name('omd').with_allow_virtual('true') }
       end
 
     end
