@@ -58,7 +58,33 @@ describe 'omd::node' do
 
   describe 'configuration' do
 
-#    it { is_expected.to contain_file
+    it do
+      is_expected.to contain_xinetd__service('check_mk').with({
+        :service_type            => 'UNLISTED',
+        :port                    => 6556,
+        :server                  => '/usr/bin/check_mk_agent',
+        :log_on_success          =>  '',
+        :log_on_success_operator => '='
+      }).without_only_from
+    end
+
+    context 'with parameter check_only_from => 192.168.1.1' do
+      let(:params) { default_params.merge({ :check_only_from => '192.168.1.1' })}
+      it { is_expected.to contain_xinetd__service('check_mk').with_only_from('192.168.1.1') }
+    end
+    context 'with parameter check_only_from => [breakme]' do
+      let(:params) { default_params.merge({ :check_only_from => ['breakme'] })}
+      it { is_expected.to raise_error(/is not a string/) }
+    end
+
+    context 'with parameter check_agent => /usr/bin/check_mk_caching_agent' do
+      let(:params) { default_params.merge({ :check_agent => '/usr/bin/check_mk_caching_agent' })}
+      it { is_expected.to contain_xinetd__service('check_mk').with_server('/usr/bin/check_mk_caching_agent') }
+    end
+    context 'with parameter check_agent => brea kme' do
+      let(:params) { default_params.merge({ :check_agent => 'brea kme' })}
+      it { is_expected.to raise_error(/is not an absolute path/) }
+    end
 
   end
 

@@ -12,6 +12,14 @@
 #   <https://mathias-kettner.de/check_mk_download.html>, e.g. '1.2.4p5-1'
 #   *MUST*
 #
+# [*check_only_from*]
+#   Ipadresses/networks that check_mk over xinetd accepps access from.
+#   defaults to _undef_
+#
+# [*check_agent*]
+#   Binary which does the checks
+#   defaults to _/usr/bin/check_mk_
+#
 # === Examples
 #
 # include omd
@@ -25,9 +33,13 @@
 # Copyright 2014 Frederik Wagner
 #
 class omd::node (
-  $check_mk_version
-) {
+  $check_mk_version,
+  $check_only_from = $omd::node::params::check_only_from,
+  $check_agent     = $omd::node::params::check_agent,
+) inherits omd::node::params {
   validate_string($check_mk_version)
+  validate_string($check_only_from)
+  validate_absolute_path($check_agent)
   
   contain omd::node::install
   contain omd::node::config

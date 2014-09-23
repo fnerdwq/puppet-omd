@@ -12,5 +12,8 @@ fixtures:
     staging:
       repo: "git://github.com/nanliu/puppet-staging"
       ref: "1.0.0"
+    xinetd:
+      repo: "git://github.com/puppetlabs/puppetlabs-xinetd"
+      ref: "1.3.1"
   symlinks:
     omd: "#{source_dir}"
