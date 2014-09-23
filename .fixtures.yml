@@ -9,5 +9,8 @@ fixtures:
     epel:
       repo: "git://github.com/stahnma/puppet-module-epel"
       ref: "1.0.0"
+    staging:
+      repo: "git://github.com/nanliu/puppet-staging"
+      ref: "1.0.0"
   symlinks:
     omd: "#{source_dir}"
