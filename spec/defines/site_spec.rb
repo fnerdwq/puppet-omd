@@ -55,7 +55,6 @@ describe 'omd::site' do
     end
   end
 
-  ### Site configuration
   describe 'site configuration' do
     let(:params) {{ :options => { 'DEFAULT_GUI' => 'check_mk' } }}
     it do
@@ -86,6 +85,34 @@ describe 'omd::site' do
         }).that_subscribes_to('Exec[create omd site: othersite]')
       end
     end
+  end
+
+  describe 'node configuration' do
+    it do
+      is_expected.to contain_omd__site__config_nodes('default').with({
+        :folder => 'collected_nodes',
+      }).that_requires( 'Omd::Site::Service[default]')
+    end
+
+    context 'with parameter config_nodes => false' do
+      let(:params) {{ :config_nodes => false }}
+      it { is_expected.to_not contain_omd__site__config_nodes('default') }
+    end
+    context 'with parameter config_nodes => breakme' do
+      let(:params) {{ :config_nodes => 'breakme' }}
+      it { is_expected.to raise_error(/is not a boolean/) }
+    end
+
+    context 'with parameter config_nodes_folder => otherfolder' do
+      let(:params) {{ :config_nodes_folder => 'otherfolder' }}
+      it do
+        is_expected.to contain_omd__site__config_nodes('default').with({
+          :folder => 'otherfolder',
+        })
+      end
+    end
+
+
   end
 
 

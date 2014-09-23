@@ -31,6 +31,14 @@
 #   Site configuration hash, e.g. { 'DEFAULT_GUI' => 'check_mk' , ... }
 #   defaults to _undef_
 #
+# [*config_nodes*]
+#   Collect and configure exported nodes for this site.
+#   defaults to _true_
+#
+# [*config_nodes_folder*]
+#   Folder in check_mk where to store automatically collected nodes.
+#   defaults to _collected_nodes_
+#
 # === Examples
 #
 # omd::site { 'default': }
@@ -43,13 +51,15 @@
 #
 # Copyright 2014 Frederik Wagner
 #
-define omd::site (
-  $ensure         = 'present',
-  $uid            = undef,
-  $gid            = undef,
-  $service_ensure = 'running',
-  $service_reload = false,
-  $options        = undef,
+define omd::site  (
+  $ensure              = 'present',
+  $uid                 = undef,
+  $gid                 = undef,
+  $service_ensure      = 'running',
+  $service_reload      = false,
+  $options             = undef,
+  $config_nodes        = true,
+  $config_nodes_folder = 'collected_nodes',
 ) {
   validate_re($ensure, '^present|absent$')
   if $uid {
@@ -61,7 +71,9 @@ define omd::site (
     $_gid = "--gid ${gid} "
   }
   # $service_* validation in omd::service
-  # $options_* validation in omd::config
+  # $options validation in omd::config
+  validate_bool($config_nodes)
+  # $config_nodes_* validation in omd::config_nodes
 
   require omd
 
@@ -88,6 +100,13 @@ define omd::site (
     } else {
       Exec["create omd site: ${name}"] ~>
       Omd::Site::Service[$name]
+    }
+
+    if $config_nodes {
+      omd::site::config_nodes { $name:
+        folder  => $config_nodes_folder,
+        require => Omd::Site::Service[$name],
+      }
     }
 
   } else {
