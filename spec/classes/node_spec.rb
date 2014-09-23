@@ -25,6 +25,7 @@ describe 'omd::node' do
       it do
         is_expected.to contain_package('check_mk-agent').with({
           :ensure   => 'installed',
+          :name     => 'check-mk-agent',
           :source   => '/opt/staging/omd/check-mk-agent_1.2.4p5-1_all.deb',
           :provider => 'dpkg',
         })
@@ -39,6 +40,7 @@ describe 'omd::node' do
       it do
         is_expected.to contain_package('check_mk-agent').with({
           :ensure   => 'installed',
+          :name     => 'check_mk-agent',
           :source   => 'https://mathias-kettner.de/download/check_mk-agent-1.2.4p5-1.noarch.rpm',
           :provider => 'rpm',
         })

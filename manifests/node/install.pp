@@ -15,12 +15,14 @@ class omd::node::install {
 
       $pkg_source   = "/opt/staging/omd/${filename}"
       $pkg_provider = 'dpkg'
+      $pkg_name     = 'check-mk-agent'
 
     }
     'RedHat': {
 
       $pkg_source   = "${download_source}/check_mk-agent-${omd::node::check_mk_version}.noarch.rpm"
       $pkg_provider = 'rpm'
+      $pkg_name     = 'check_mk-agent'
 
     }
     default: {
@@ -30,6 +32,7 @@ class omd::node::install {
 
   package { 'check_mk-agent':
     ensure   => installed,
+    name     => $pkg_name,
     source   => $pkg_source,
     provider => $pkg_provider,
   }
