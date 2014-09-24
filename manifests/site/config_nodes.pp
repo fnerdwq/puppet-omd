@@ -28,7 +28,6 @@ define omd::site::config_nodes (
     owner  => $name,
     group  => $name,
     mode   => '0660',
-    notify => Exec["check_mk inventory for site ${name}"],
   }
 
   concat::fragment { "${name} site's hosts.mk header":
@@ -47,9 +46,10 @@ define omd::site::config_nodes (
 
   Concat::Fragment <<| tag == "omd_node_site_${name}" |>>
 
-  exec { "check_mk inventory for site ${name}":
-    command     => "su - ${name} -c 'check_mk -I @puppet_generated; check_mk -O'",
+  exec { "check_mk update site ${name}":
+    command     => "su - ${name} -c 'check_mk -O'",
     refreshonly => true,
+    subscribe   => Concat[$hosts_file],
   }
 
 }

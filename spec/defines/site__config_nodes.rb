@@ -59,8 +59,8 @@ describe 'omd::site::config_nodes' do
       end
 
       it do
-        is_expected.to contain_exec("check_mk inventory for site default").with({
-          :command     => "su - default -c 'check_mk -I @puppet_generated; check_mk -O'",
+        is_expected.to contain_exec("check_mk update site default").with({
+          :command     => "su - default -c 'check_mk -O'",
           :refreshonly => true,
         }).that_subscribes_to("Concat[#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk]")
       end
