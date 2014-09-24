@@ -13,6 +13,7 @@ describe 'omd::node' do
 
   it { is_expected.to contain_class('omd::node::install') }
   it { is_expected.to contain_class('omd::node::config').that_requires('omd::node::install') }
+  it { is_expected.not_to contain_class('omd::node::export') }
 
   describe 'installation' do
 
@@ -89,5 +90,49 @@ describe 'omd::node' do
     end
 
   end
+
+  describe 'export' do
+    # external resources cannot be tested
+
+    context "with parameter export => true, site => default" do
+      let(:params) { default_params.merge({
+        :export => true,
+        :site   => 'default'
+      }) }
+      it { is_expected.to contain_class('omd::node::export').that_requires('omd::node::config') }
+
+      # further cannot be tested easily...
+    end
+
+    context "with parameter export => true, site => undef" do
+      let(:params) { default_params.merge({
+        :export => true,
+      }) }
+      it { is_expected.to raise_error(/does not match/) }
+    end
+    context "with parameter export => breakme, site => undef" do
+      let(:params) { default_params.merge({
+        :export => 'breakme',
+      }) }
+      it { is_expected.to raise_error(/is not a boolean/) }
+    end
+    context "with parameter export => true, site => break me" do
+      let(:params) { default_params.merge({
+        :export => true,
+        :site   => 'break me',
+      }) }
+      it { is_expected.to raise_error(/does not match/) }
+    end
+    context "with parameter export => true, site => default, folder => break me" do
+      let(:params) { default_params.merge({
+        :export => true,
+        :site   => 'default',
+        :folder => 'break me',
+      }) }
+      it { is_expected.to raise_error(/does not match/) }
+    end
+
+  end
+
 
 end

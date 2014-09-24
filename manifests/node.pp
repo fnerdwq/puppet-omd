@@ -36,15 +36,29 @@ class omd::node (
   $check_mk_version,
   $check_only_from = $omd::node::params::check_only_from,
   $check_agent     = $omd::node::params::check_agent,
+  $export          = $omd::node::params::export,
+  $site            = $omd::node::params::site,
+  $folder          = $omd::node::params::folder,
 ) inherits omd::node::params {
   validate_string($check_mk_version)
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
+  validate_bool($export)
   
   contain omd::node::install
   contain omd::node::config
 
   Class['omd::node::install'] ->
   Class['omd::node::config']
+
+  if $export {
+    validate_re($site, '^\w+$')
+    validate_re($folder, '^\w+$')
+
+    contain omd::node::export
+
+    Class['omd::node::config'] ->
+    Class['omd::node::export']
+  }
 
 }

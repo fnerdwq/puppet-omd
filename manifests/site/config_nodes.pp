@@ -14,17 +14,27 @@ define omd::site::config_nodes (
     mode   => '0770',
   }
 
+  file { "${name} site\'s ${folder}/.wato file":
+    ensure  => present,
+    path    => "${wato_dir}/${folder}/.wato",
+    owner   => $name,
+    group   => $name,
+    mode    => '0660',
+    content => template('omd/config_nodes.wato.erb'),
+  }
+
   concat { $hosts_file:
     ensure => present,
     owner  => $name,
     group  => $name,
     mode   => '0660',
+    notify => Exec["check_mk inventory for site ${name}"],
   }
 
   concat::fragment { "${name} site's hosts.mk header":
     target  => $hosts_file,
     order   => '01',
-    content => "### Managed by puppet.\n\nall_hosts += [\n",
+    content => "### Managed by puppet.\n\n_lock='Puppet generated'\n\nall_hosts += [\n",
   }
     
   concat::fragment { "${name} site's hosts.mk footer":
@@ -33,5 +43,13 @@ define omd::site::config_nodes (
     content => "]\n",
   }
 
+# TODO notification of check_mk -I or similar
+
+  Concat::Fragment <<| tag == "omd_node_site_${name}" |>>
+
+  exec { "check_mk inventory for site ${name}":
+    command     => "su - ${name} -c 'check_mk -I @puppet_generated; check_mk -O'",
+    refreshonly => true,
+  }
 
 }

@@ -36,7 +36,7 @@ describe 'omd::site::config_nodes' do
         is_expected.to contain_concat__fragment('default site\'s hosts.mk header').with({
           :target  => "#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk",
           :order   => '01',
-          :content => /all_hosts \+= \[/,
+          :content => /_lock='Puppet generated'\n\nall_hosts \+= \[/,
         })
       end
       it do 
@@ -46,6 +46,25 @@ describe 'omd::site::config_nodes' do
           :content => /\]/,
         })
       end
+
+      it do
+        is_expected.to contain_file("default site\'s #{nodes_dir}/.wato file").with({
+          :ensure  => 'present',
+          :path    => "#{site_path}/default#{wato_path}/#{nodes_dir}/.wato",
+          :content => /'title':.*#{nodes_dir}/,
+          :owner   => 'default',
+          :group   => 'default',
+          :mode    => '0660',
+        })
+      end
+
+      it do
+        is_expected.to contain_exec("check_mk inventory for site default").with({
+          :command     => "su - default -c 'check_mk -I @puppet_generated; check_mk -O'",
+          :refreshonly => true,
+        }).that_subscribes_to("Concat[#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk]")
+      end
+
     end
   end
 
