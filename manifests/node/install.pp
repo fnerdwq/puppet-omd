@@ -1,7 +1,7 @@
 # (private) installs a omd::node
 class omd::node::install {
 
-  $download_source = 'https://mathias-kettner.de/download'
+  $download_source = 'http://mathias-kettner.de/download'
 
   case $::osfamily {
     'Debian': {

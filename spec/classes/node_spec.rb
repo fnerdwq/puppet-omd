@@ -20,7 +20,7 @@ describe 'omd::node' do
     context 'on Debian like systems' do
       it do
         is_expected.to contain_staging__file('check-mk-agent_1.2.4p5-1_all.deb')\
-          .with_source('https://mathias-kettner.de/download/check-mk-agent_1.2.4p5-1_all.deb')\
+          .with_source('http://mathias-kettner.de/download/check-mk-agent_1.2.4p5-1_all.deb')\
           .that_comes_before('Package[check_mk-agent]')
       end
       it do
@@ -42,7 +42,7 @@ describe 'omd::node' do
         is_expected.to contain_package('check_mk-agent').with({
           :ensure   => 'installed',
           :name     => 'check_mk-agent',
-          :source   => 'https://mathias-kettner.de/download/check_mk-agent-1.2.4p5-1.noarch.rpm',
+          :source   => 'http://mathias-kettner.de/download/check_mk-agent-1.2.4p5-1.noarch.rpm',
           :provider => 'rpm',
         })
       end
