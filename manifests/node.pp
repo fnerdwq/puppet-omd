@@ -20,6 +20,18 @@
 #   Binary which does the checks
 #   defaults to _/usr/bin/check_mk_
 #
+# [*export*]
+#   Should the nodes be exported?
+#   defaults to _false_
+#
+# [*site*]
+#   OMD site to export the nodes to (must be set if export is true)
+#   defaults to _undef_
+#
+# [*folder*]
+#   Folder were exported nodes are collected to.
+#   defaults to _collected_nodes_
+#
 # === Examples
 #
 # include omd
