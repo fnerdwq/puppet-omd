@@ -61,6 +61,7 @@ define omd::site  (
   $config_nodes        = true,
   $config_nodes_folder = 'collected_nodes',
 ) {
+  validate_re($name, '^\w+$')
   validate_re($ensure, '^present|absent$')
   if $uid {
     validate_re($uid, '\d+')

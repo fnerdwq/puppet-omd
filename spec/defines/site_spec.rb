@@ -6,6 +6,11 @@ describe 'omd::site' do
   it { is_expected.to contain_omd__site('default') }
   it { is_expected.to contain_class('omd') }
 
+  context 'with title => break me' do
+    let(:title) { 'break me' }
+    it { is_expected.to raise_error(/does not match/) }
+  end
+
   describe 'site creation' do
     it do
       is_expected.to contain_exec('create omd site: default').with({
