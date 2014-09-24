@@ -6,10 +6,10 @@ class omd::node::export {
 
   @@concat::fragment { "default site's hostmk entry for ${::fqdn}":
     target  => $hosts_file,
-    content => "${::fqdn}|puppet_generated",
+    content => "  \"${::fqdn}|puppet_generated\",\n",
     backup  => false,
     order   => 10,
-    tag     => 'omd_noded_site_default',
+    tag     => "omd_node_site_${omd::node::site}",
   }
 
 
