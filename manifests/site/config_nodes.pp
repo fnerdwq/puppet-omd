@@ -30,13 +30,13 @@ define omd::site::config_nodes (
     mode   => '0660',
   }
 
-  concat::fragment { "${name} site's hosts.mk header":
+  concat::fragment { "${name} site's ${folder}/hosts.mk header":
     target  => $hosts_file,
     order   => '01',
     content => "### Managed by puppet.\n\n_lock='Puppet generated'\n\nall_hosts += [\n",
   }
     
-  concat::fragment { "${name} site's hosts.mk footer":
+  concat::fragment { "${name} site's ${folder}/hosts.mk footer":
     target  => $hosts_file,
     order   => '99',
     content => "]\n",
@@ -44,7 +44,7 @@ define omd::site::config_nodes (
 
 # TODO notification of check_mk -I or similar
 
-  Concat::Fragment <<| tag == "omd_node_site_${name}" |>>
+  Omd::Node::Export <<| tag == "omd_node_site_${name}_folder_${folder}" |>>
 
   exec { "check_mk update site ${name}":
     command     => "su - ${name} -c 'check_mk -O'",

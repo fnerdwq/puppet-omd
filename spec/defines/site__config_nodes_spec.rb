@@ -11,11 +11,11 @@ describe 'omd::site::config_nodes' do
 
   site_path = '/opt/omd/sites'
   wato_path = '/etc/check_mk/conf.d/wato'
-  ['collected_nodes', 'NODES'].each do |nodes_dir|
-    context "with parameter folder => #{nodes_dir}" do
-      let(:params) { default_params.merge({ :folder => nodes_dir }) }
+  ['collected_nodes', 'NODES'].each do |folder|
+    context "with parameter folder => #{folder}" do
+      let(:params) { default_params.merge({ :folder => folder }) }
       it do
-        is_expected.to contain_file("#{site_path}/default#{wato_path}/#{nodes_dir}").with({
+        is_expected.to contain_file("#{site_path}/default#{wato_path}/#{folder}").with({
           :ensure => 'directory',
           :owner  => 'default',
           :group  => 'default',
@@ -24,7 +24,7 @@ describe 'omd::site::config_nodes' do
       end
   
       it do
-        is_expected.to contain_concat("#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk").with({
+        is_expected.to contain_concat("#{site_path}/default#{wato_path}/#{folder}/hosts.mk").with({
           :ensure => 'present',
           :owner  => 'default',
           :group  => 'default',
@@ -33,25 +33,25 @@ describe 'omd::site::config_nodes' do
       end
   
       it do 
-        is_expected.to contain_concat__fragment('default site\'s hosts.mk header').with({
-          :target  => "#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk",
+        is_expected.to contain_concat__fragment("default site's #{folder}/hosts.mk header").with({
+          :target  => "#{site_path}/default#{wato_path}/#{folder}/hosts.mk",
           :order   => '01',
           :content => /_lock='Puppet generated'\n\nall_hosts \+= \[/,
         })
       end
       it do 
-        is_expected.to contain_concat__fragment('default site\'s hosts.mk footer').with({
-          :target  => "#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk",
+        is_expected.to contain_concat__fragment("default site\'s #{folder}/hosts.mk footer").with({
+          :target  => "#{site_path}/default#{wato_path}/#{folder}/hosts.mk",
           :order   => '99',
           :content => /\]/,
         })
       end
 
       it do
-        is_expected.to contain_file("default site\'s #{nodes_dir}/.wato file").with({
+        is_expected.to contain_file("default site\'s #{folder}/.wato file").with({
           :ensure  => 'present',
-          :path    => "#{site_path}/default#{wato_path}/#{nodes_dir}/.wato",
-          :content => /'title':.*#{nodes_dir}/,
+          :path    => "#{site_path}/default#{wato_path}/#{folder}/.wato",
+          :content => /'title':.*#{folder}/,
           :owner   => 'default',
           :group   => 'default',
           :mode    => '0660',
@@ -62,7 +62,7 @@ describe 'omd::site::config_nodes' do
         is_expected.to contain_exec("check_mk update site default").with({
           :command     => "su - default -c 'check_mk -O'",
           :refreshonly => true,
-        }).that_subscribes_to("Concat[#{site_path}/default#{wato_path}/#{nodes_dir}/hosts.mk]")
+        }).that_subscribes_to("Concat[#{site_path}/default#{wato_path}/#{folder}/hosts.mk]")
       end
 
     end
