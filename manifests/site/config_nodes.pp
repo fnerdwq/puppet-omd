@@ -42,9 +42,7 @@ define omd::site::config_nodes (
     content => "]\n",
   }
 
-# TODO notification of check_mk -I or similar
-
-  Omd::Node::Export <<| tag == "omd_node_site_${name}_folder_${folder}" |>>
+  Omd::Node::Export <<| tag == "omd_node_site_${name}" |>>
 
   exec { "check_mk update site ${name}":
     command     => "su - ${name} -c 'check_mk -O'",

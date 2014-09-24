@@ -13,7 +13,6 @@ describe 'omd::node' do
 
   it { is_expected.to contain_class('omd::node::install') }
   it { is_expected.to contain_class('omd::node::config').that_requires('omd::node::install') }
-  it { is_expected.not_to contain_class('omd::node::export') }
 
   describe 'installation' do
 
@@ -92,16 +91,14 @@ describe 'omd::node' do
   end
 
   describe 'export' do
-    # external resources cannot be tested
 
     context "with parameter export => true, site => default" do
       let(:params) { default_params.merge({
         :export => true,
         :site   => 'default'
       }) }
-      it { is_expected.to contain_class('omd::node::export').that_requires('omd::node::config') }
 
-      # further cannot be tested easily...
+      # external resources cannot be tested
     end
 
     context "with parameter export => true, site => undef" do

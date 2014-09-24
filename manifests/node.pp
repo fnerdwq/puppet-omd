@@ -56,7 +56,7 @@ class omd::node (
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
   validate_bool($export)
-  
+
   contain omd::node::install
   contain omd::node::config
 
@@ -67,10 +67,10 @@ class omd::node (
     validate_re($site, '^\w+$')
     validate_re($folder, '^\w+$')
 
-    contain omd::node::export
-
-    Class['omd::node::config'] ->
-    Class['omd::node::export']
+    @@omd::node::export{ "${site} - ${::fqdn}":
+      folder => $folder,
+      tag    => "omd_node_site_${site}"
+    }
   }
 
 }

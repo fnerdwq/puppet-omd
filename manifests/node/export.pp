@@ -1,15 +1,32 @@
-# (private) exports node for inclusion in omd checks
-class omd::node::export {
+# (private) defines an exported node for inclusion in omd checks
+define omd::node::export (
+  $folder
+) {
+  validate_re($folder, '^\w+$')
 
-  $wato_dir   = "/opt/omd/sites/${omd::node::site}/etc/check_mk/conf.d/wato"
-  $hosts_file = "${wato_dir}/${omd::node::folder}/hosts.mk"
+  $splitted_name = split($name, ' - ')
 
-  @@concat::fragment { "default site's hostmk entry for ${::fqdn}":
+  $site   = $splitted_name[0]
+  $fqdn   = $splitted_name[1]
+
+  validate_re($site, '^\w+$')
+  validate_re($fqdn, '^(\w+\.)+\w+$')
+
+  $wato_dir   = "/opt/omd/sites/${site}/etc/check_mk/conf.d/wato"
+  $hosts_file = "${wato_dir}/${folder}/hosts.mk"
+
+  concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn}":
     target  => $hosts_file,
-    content => "  \"${::fqdn}|puppet_generated\",\n",
+    content => "  \"${fqdn}|puppet_generated\",\n",
     backup  => false,
     order   => 10,
-    tag     => "omd_node_site_${omd::node::site}",
+  }
+
+  exec { "check_mk inventorize ${fqdn} for site ${site}":
+    command     => "su - ${site} -c 'check_mk -I ${fqdn}'",
+    refreshonly => true,
+    subscribe   => Concat[$hosts_file],
+    before      => Exec["check_mk update site ${site}"],
   }
 
 
