@@ -10,7 +10,7 @@ define omd::node::export (
   $fqdn   = $splitted_name[1]
 
   validate_re($site, '^\w+$')
-  validate_re($fqdn, '^(\w+\.)+\w+$')
+  validate_re($fqdn, '^([a-zA-Z0-9-]+\.)+[a-zA-Z0-9-]+$')
 
   $wato_dir   = "/opt/omd/sites/${site}/etc/check_mk/conf.d/wato"
   $hosts_file = "${wato_dir}/${folder}/hosts.mk"

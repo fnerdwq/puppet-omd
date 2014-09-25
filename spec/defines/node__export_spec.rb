@@ -46,7 +46,7 @@ describe 'omd::node::export' do
     it { is_expected.to raise_error(/does not match/) }
   end
   context 'with broken title: default - broken .example.com' do
-    let(:title) { 'default - broken .example.com' }
+    let(:title) { 'default - broken_example.com' }
     it { is_expected.to raise_error(/does not match/) }
   end
   context 'with broken parameter folder => break me' do
