@@ -8,6 +8,7 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet'
   gem 'puppetlabs_spec_helper'
+  gem 'rspec-puppet-utils'
 
 #  gem 'beaker'
 #  gem 'beaker-rspec'

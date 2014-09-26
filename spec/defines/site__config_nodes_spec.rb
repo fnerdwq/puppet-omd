@@ -7,6 +7,14 @@ describe 'omd::site::config_nodes' do
   }}
   let(:params) { default_params }
 
+  # mock function from puppetdbquery
+  # users rspec-puppet-utils MockFunction
+  let!(:query_nodes) { 
+    MockFunction.new('query_nodes') { |f|
+      f.stubs(:call).returns([1,2,3,4])
+    }
+  }
+
   it { is_expected.to contain_omd__site__config_nodes('default') }
 
   site_path = '/opt/omd/sites'
