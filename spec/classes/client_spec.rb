@@ -90,46 +90,4 @@ describe 'omd::client' do
 
   end
 
-  describe 'export' do
-
-    context "with parameter export => true, site => default" do
-      let(:params) { default_params.merge({
-        :export => true,
-        :site   => 'default'
-      }) }
-
-      # external resources cannot be tested
-    end
-
-    context "with parameter export => true, site => undef" do
-      let(:params) { default_params.merge({
-        :export => true,
-      }) }
-      it { is_expected.to raise_error(/does not match/) }
-    end
-    context "with parameter export => breakme, site => undef" do
-      let(:params) { default_params.merge({
-        :export => 'breakme',
-      }) }
-      it { is_expected.to raise_error(/is not a boolean/) }
-    end
-    context "with parameter export => true, site => break me" do
-      let(:params) { default_params.merge({
-        :export => true,
-        :site   => 'break me',
-      }) }
-      it { is_expected.to raise_error(/does not match/) }
-    end
-    context "with parameter export => true, site => default, folder => break me" do
-      let(:params) { default_params.merge({
-        :export => true,
-        :site   => 'default',
-        :folder => 'break me',
-      }) }
-      it { is_expected.to raise_error(/does not match/) }
-    end
-
-  end
-
-
 end

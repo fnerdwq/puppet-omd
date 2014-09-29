@@ -1,8 +1,10 @@
-# (private) defines an exported client for inclusion in omd checks
-define omd::client::export (
-  $folder
+# (private) defines an exported hosts for inclusion in omd checks
+define omd::host::export (
+  $folder,
+  $tags,
 ) {
   validate_re($folder, '^\w+$')
+  validate_array($tags)
 
   $splitted_name = split($name, ' - ')
 
@@ -15,9 +17,11 @@ define omd::client::export (
   $wato_dir   = "/omd/sites/${site}/etc/check_mk/conf.d/wato"
   $hosts_file = "${wato_dir}/${folder}/hosts.mk"
 
+  $content_str = join( flatten([$fqdn, 'puppet_generated', $tags]), '|')
+
   concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn}":
     target  => $hosts_file,
-    content => "  \"${fqdn}|puppet_generated\",\n",
+    content => "  \"${content_str}\",\n",
     backup  => false,
     order   => 10,
   }

@@ -100,29 +100,36 @@ describe 'omd::site' do
     end
   end
 
-  describe 'client configuration' do
+  describe 'hosts configuration' do
     it do
-      is_expected.to contain_omd__site__config_clients('default').with({
-        :folder => 'collected_clients',
-      }).that_requires( 'Omd::Site::Service[default]')
+      is_expected.to contain_omd__site__config_hosts('default - collected_hosts')\
+        .that_requires( 'Omd::Site::Service[default]')
+    end
+    it do
+      is_expected.to contain_exec("check_mk update site default").with({
+        :command     => "su - default -c 'check_mk -O'",
+        :refreshonly => true,
+      }).that_subscribes_to("Omd::Site::Config_hosts[default - collected_hosts]")
     end
 
-    context 'with parameter config_clients => false' do
-      let(:params) {{ :config_clients => false }}
-      it { is_expected.to_not contain_omd__site__config_clients('default') }
+
+    context 'with parameter config_hosts => false' do
+      let(:params) {{ :config_hosts => false }}
+      it { is_expected.to_not contain_omd__site__config_hosts('default - collected_hosts') }
     end
-    context 'with parameter config_clients => breakme' do
-      let(:params) {{ :config_clients => 'breakme' }}
+    context 'with parameter config_hosts => breakme' do
+      let(:params) {{ :config_hosts => 'breakme' }}
       it { is_expected.to raise_error(/is not a boolean/) }
     end
 
-    context 'with parameter config_clients_folder => otherfolder' do
-      let(:params) {{ :config_clients_folder => 'otherfolder' }}
-      it do
-        is_expected.to contain_omd__site__config_clients('default').with({
-          :folder => 'otherfolder',
-        })
-      end
+    context 'with parameter config_hosts_folders => [folder, otherfolder]' do
+      let(:params) {{ :config_hosts_folders => ['folder', 'otherfolder'] }}
+      it { is_expected.to contain_omd__site__config_hosts('default - folder') }
+      it { is_expected.to contain_omd__site__config_hosts('default - otherfolder') }
+    end
+    context 'with parameter config_hosts_folders => breakme' do
+      let(:params) {{ :config_hosts_folders => 'breakme' }}
+      it { is_expected.to raise_error(/is not an Array/) }
     end
 
 

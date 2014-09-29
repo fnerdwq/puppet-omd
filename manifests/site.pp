@@ -31,13 +31,13 @@
 #   Site configuration hash, e.g. { 'DEFAULT_GUI' => 'check_mk' , ... }
 #   defaults to _undef_
 #
-# [*config_clients*]
-#   Collect and configure exported clients for this site.
+# [*config_hosts*]
+#   Collect and configure exported hosts for this site.
 #   defaults to _true_
 #
-# [*config_clients_folder*]
-#   Folder in check_mk where to store automatically collected clients.
-#   defaults to _collected_clients_
+# [*config_hosts_folders*]
+#   Folders in check_mk where to store and automatically collected hosts to.
+#   defaults to _['collected_hosts']_
 #
 # === Examples
 #
@@ -52,14 +52,14 @@
 # Copyright 2014 Frederik Wagner
 #
 define omd::site  (
-  $ensure                = 'present',
-  $uid                   = undef,
-  $gid                   = undef,
-  $service_ensure        = 'running',
-  $service_reload        = false,
-  $options               = undef,
-  $config_clients        = true,
-  $config_clients_folder = 'collected_clients',
+  $ensure               = 'present',
+  $uid                  = undef,
+  $gid                  = undef,
+  $service_ensure       = 'running',
+  $service_reload       = false,
+  $options              = undef,
+  $config_hosts         = true,
+  $config_hosts_folders = ['collected_hosts'],
 ) {
   validate_re($name, '^\w+$')
   validate_re($ensure, '^present|absent$')
@@ -73,8 +73,7 @@ define omd::site  (
   }
   # $service_* validation in omd::service
   # $options validation in omd::config
-  validate_bool($config_clients)
-  # $config_clients_* validation in omd::config_clients
+  validate_bool($config_hosts)
 
   require omd::server
 
@@ -103,11 +102,21 @@ define omd::site  (
       Omd::Site::Service[$name]
     }
 
-    if $config_clients {
-      omd::site::config_clients { $name:
-        folder  => $config_clients_folder,
+    if $config_hosts {
+      validate_array($config_hosts_folders)
+
+      $config_hosts_array = prefix($config_hosts_folders, "${name} - ")
+
+      omd::site::config_hosts { $config_hosts_array:
         require => Omd::Site::Service[$name],
+        notify  => Exec["check_mk update site ${name}"],
       }
+
+      exec { "check_mk update site ${name}":
+        command     => "su - ${name} -c 'check_mk -O'",
+        refreshonly => true,
+      }
+
     }
 
   } else {
