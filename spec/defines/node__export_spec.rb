@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'omd::node::export' do
   let(:params) {{ :folder => 'collected_nodes' }}
 
-  site_path = '/opt/omd/sites'
+  site_path = '/omd/sites'
   wato_path = '/etc/check_mk/conf.d/wato'
 
   [ { :site   => 'default',

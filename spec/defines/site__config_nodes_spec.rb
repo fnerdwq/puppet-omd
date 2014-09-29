@@ -17,7 +17,7 @@ describe 'omd::site::config_nodes' do
 
   it { is_expected.to contain_omd__site__config_nodes('default') }
 
-  site_path = '/opt/omd/sites'
+  site_path = '/omd/sites'
   wato_path = '/etc/check_mk/conf.d/wato'
   ['collected_nodes', 'NODES'].each do |folder|
     context "with parameter folder => #{folder}" do

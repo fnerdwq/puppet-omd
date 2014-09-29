@@ -12,7 +12,7 @@ define omd::node::export (
   validate_re($site, '^\w+$')
   validate_re($fqdn, '^([a-zA-Z0-9-]+\.)+[a-zA-Z0-9-]+$')
 
-  $wato_dir   = "/opt/omd/sites/${site}/etc/check_mk/conf.d/wato"
+  $wato_dir   = "/omd/sites/${site}/etc/check_mk/conf.d/wato"
   $hosts_file = "${wato_dir}/${folder}/hosts.mk"
 
   concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn}":

@@ -4,7 +4,7 @@ define omd::site::config_nodes (
 ) {
   validate_re($folder, '^\w+$')
 
-  $wato_dir   = "/opt/omd/sites/${name}/etc/check_mk/conf.d/wato"
+  $wato_dir   = "/omd/sites/${name}/etc/check_mk/conf.d/wato"
   $hosts_file = "${wato_dir}/${folder}/hosts.mk"
 
   file { "${wato_dir}/${folder}":
