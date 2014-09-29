@@ -12,7 +12,7 @@ describe 'omd::site' do
   }
 
   it { is_expected.to contain_omd__site('default') }
-  it { is_expected.to contain_class('omd') }
+  it { is_expected.to contain_class('omd::server').that_comes_before('Omd::Site[default]') }
 
   context 'with title => break me' do
     let(:title) { 'break me' }
@@ -100,26 +100,26 @@ describe 'omd::site' do
     end
   end
 
-  describe 'node configuration' do
+  describe 'client configuration' do
     it do
-      is_expected.to contain_omd__site__config_nodes('default').with({
-        :folder => 'collected_nodes',
+      is_expected.to contain_omd__site__config_clients('default').with({
+        :folder => 'collected_clients',
       }).that_requires( 'Omd::Site::Service[default]')
     end
 
-    context 'with parameter config_nodes => false' do
-      let(:params) {{ :config_nodes => false }}
-      it { is_expected.to_not contain_omd__site__config_nodes('default') }
+    context 'with parameter config_clients => false' do
+      let(:params) {{ :config_clients => false }}
+      it { is_expected.to_not contain_omd__site__config_clients('default') }
     end
-    context 'with parameter config_nodes => breakme' do
-      let(:params) {{ :config_nodes => 'breakme' }}
+    context 'with parameter config_clients => breakme' do
+      let(:params) {{ :config_clients => 'breakme' }}
       it { is_expected.to raise_error(/is not a boolean/) }
     end
 
-    context 'with parameter config_nodes_folder => otherfolder' do
-      let(:params) {{ :config_nodes_folder => 'otherfolder' }}
+    context 'with parameter config_clients_folder => otherfolder' do
+      let(:params) {{ :config_clients_folder => 'otherfolder' }}
       it do
-        is_expected.to contain_omd__site__config_nodes('default').with({
+        is_expected.to contain_omd__site__config_clients('default').with({
           :folder => 'otherfolder',
         })
       end

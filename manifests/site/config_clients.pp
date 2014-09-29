@@ -1,5 +1,5 @@
-# (private) collects and configures nodes in check_mk
-define omd::site::config_nodes (
+# (private) collects and configures clients in check_mk
+define omd::site::config_clients (
   $folder
 ) {
   validate_re($folder, '^\w+$')
@@ -14,7 +14,7 @@ define omd::site::config_nodes (
     mode   => '0770',
   }
 
-  # get all resources/nodes wich are exported for this site/folder from PuppetDB
+  # get all resources/nodess wich are exported for this site/folder from PuppetDB
   $num_hosts = count(query_nodes("Class[Omd::Node]{export=true and site=${name} and folder=${folder}}"))
   file { "${name} site\'s ${folder}/.wato file":
     ensure  => present,
@@ -22,7 +22,7 @@ define omd::site::config_nodes (
     owner   => $name,
     group   => $name,
     mode    => '0660',
-    content => template('omd/config_nodes.wato.erb'),
+    content => template('omd/config_clients.wato.erb'),
   }
 
   concat { $hosts_file:
@@ -44,7 +44,7 @@ define omd::site::config_nodes (
     content => "]\n",
   }
 
-  Omd::Node::Export <<| tag == "omd_node_site_${name}" |>>
+  Omd::Client::Export <<| tag == "omd_client_site_${name}" |>>
 
   exec { "check_mk update site ${name}":
     command     => "su - ${name} -c 'check_mk -O'",

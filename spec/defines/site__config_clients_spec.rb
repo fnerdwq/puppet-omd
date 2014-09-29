@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'omd::site::config_nodes' do
+describe 'omd::site::config_clients' do
   let(:title) { 'default' }
   let(:default_params) {{
     :folder => 'a_default'
@@ -15,11 +15,11 @@ describe 'omd::site::config_nodes' do
     }
   }
 
-  it { is_expected.to contain_omd__site__config_nodes('default') }
+  it { is_expected.to contain_omd__site__config_clients('default') }
 
   site_path = '/omd/sites'
   wato_path = '/etc/check_mk/conf.d/wato'
-  ['collected_nodes', 'NODES'].each do |folder|
+  ['collected_clients', 'NODES'].each do |folder|
     context "with parameter folder => #{folder}" do
       let(:params) { default_params.merge({ :folder => folder }) }
       it do

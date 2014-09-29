@@ -1,10 +1,10 @@
-# (private) defaults for omd::node
-class omd::node::params {
+# (private) defaults for omd::client
+class omd::client::params {
 
   $check_only_from = undef
   $check_agent     = '/usr/bin/check_mk_agent'
   $export          = false
   $site            = undef
-  $folder          = 'collected_nodes'
+  $folder          = 'collected_clients'
 
 }

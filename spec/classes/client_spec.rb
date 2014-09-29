@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'omd::node' do
+describe 'omd::client' do
 
   #################################
   # default is Debian environment #
@@ -11,8 +11,8 @@ describe 'omd::node' do
   }}
   let(:params) { default_params }
 
-  it { is_expected.to contain_class('omd::node::install') }
-  it { is_expected.to contain_class('omd::node::config').that_requires('omd::node::install') }
+  it { is_expected.to contain_class('omd::client::install') }
+  it { is_expected.to contain_class('omd::client::config').that_requires('omd::client::install') }
 
   describe 'installation' do
 

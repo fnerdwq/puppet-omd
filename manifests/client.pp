@@ -1,6 +1,6 @@
-# == Class: omd::node
+# == Class: omd::client
 #
-# This class installs and configures omd/check_mk checked node.
+# This class installs and configures omd/check_mk checked client.
 #
 # This works on Debian and RedHat like systems.
 # Puppet Version >= 3.4.0
@@ -21,16 +21,16 @@
 #   defaults to _/usr/bin/check_mk_
 #
 # [*export*]
-#   Should the nodes be exported?
+#   Should the clients be exported?
 #   defaults to _false_
 #
 # [*site*]
-#   OMD site to export the nodes to (must be set if export is true)
+#   OMD site to export the clients to (must be set if export is true)
 #   defaults to _undef_
 #
 # [*folder*]
-#   Folder were exported nodes are collected to.
-#   defaults to _collected_nodes_
+#   Folder were exported clients are collected to.
+#   defaults to _collected_clients_
 #
 # === Examples
 #
@@ -44,32 +44,32 @@
 #
 # Copyright 2014 Frederik Wagner
 #
-class omd::node (
+class omd::client (
   $check_mk_version,
-  $check_only_from = $omd::node::params::check_only_from,
-  $check_agent     = $omd::node::params::check_agent,
-  $export          = $omd::node::params::export,
-  $site            = $omd::node::params::site,
-  $folder          = $omd::node::params::folder,
-) inherits omd::node::params {
+  $check_only_from = $omd::client::params::check_only_from,
+  $check_agent     = $omd::client::params::check_agent,
+  $export          = $omd::client::params::export,
+  $site            = $omd::client::params::site,
+  $folder          = $omd::client::params::folder,
+) inherits omd::client::params {
   validate_string($check_mk_version)
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
   validate_bool($export)
 
-  contain omd::node::install
-  contain omd::node::config
+  contain omd::client::install
+  contain omd::client::config
 
-  Class['omd::node::install'] ->
-  Class['omd::node::config']
+  Class['omd::client::install'] ->
+  Class['omd::client::config']
 
   if $export {
     validate_re($site, '^\w+$')
     validate_re($folder, '^\w+$')
 
-    @@omd::node::export{ "${site} - ${::fqdn}":
+    @@omd::client::export{ "${site} - ${::fqdn}":
       folder => $folder,
-      tag    => "omd_node_site_${site}"
+      tag    => "omd_client_site_${site}"
     }
   }
 

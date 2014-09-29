@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe 'omd::node::export' do
-  let(:params) {{ :folder => 'collected_nodes' }}
+describe 'omd::client::export' do
+  let(:params) {{ :folder => 'collected_clients' }}
 
   site_path = '/omd/sites'
   wato_path = '/etc/check_mk/conf.d/wato'
 
   [ { :site   => 'default',
-      :folder => 'collected_nodes',
+      :folder => 'collected_clients',
       :fqdn   => 'foo.example.com' },
     { :site   => 'othersite',
       :folder => 'NODES',
@@ -32,7 +32,7 @@ describe 'omd::node::export' do
           :command     => "su - #{param[:site]} -c 'check_mk -I #{param[:fqdn]}'",
           :refreshonly => true
         })
-# not testable, since only in catlogue of collecting node
+# not testable, since only in catlogue of collecting client
         #.that_subscribes_to("Concat:[#{hosts_file}]")
         #.that_comes_before("Exec[check_mk update site #{param[:site]}")
       end

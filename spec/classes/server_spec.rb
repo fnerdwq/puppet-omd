@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe 'omd' do
+describe 'omd::server' do
 
   #################################
   # default is Debian environment #
   #################################
 
-  it { is_expected.to contain_class('omd::params') }
-  it { is_expected.to contain_class('omd::install') }
+  it { is_expected.to contain_class('omd::server::params') }
+  it { is_expected.to contain_class('omd::server::install') }
 
   describe 'installation' do
 
@@ -18,7 +18,7 @@ describe 'omd' do
       }
       let(:facts) { facts.merge({ :operatingsystemmajrelease => '6', }) }
 
-      it { is_expected.to contain_class('omd::install::redhat').that_comes_before('Package[omd]') }
+      it { is_expected.to contain_class('omd::server::install::redhat').that_comes_before('Package[omd]') }
       it { is_expected.to contain_class('epel') }
 
       it do 
@@ -55,7 +55,7 @@ describe 'omd' do
     end
 
     context 'on Debian like systems' do
-      it { is_expected.to contain_class('omd::install::debian').that_comes_before('Package[omd]') }
+      it { is_expected.to contain_class('omd::server::install::debian').that_comes_before('Package[omd]') }
       it { is_expected.to contain_class('apt') }
 
       context 'on Debian' do

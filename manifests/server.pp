@@ -1,4 +1,4 @@
-# == Class: omd
+# == Class: omd::server
 #
 # This class installs and configures omd.
 #
@@ -27,14 +27,14 @@
 #
 # Copyright 2014 Frederik Wagner
 #
-class omd (
-  $ensure = $omd::params::ensure,
-  $repo   = $omd::params::repo,
-) inherits omd::params {
-  validate_re($ensure, ['^installed|latest|absent|purged$', 
+class omd::server (
+  $ensure = $omd::server::params::ensure,
+  $repo   = $omd::server::params::repo,
+) inherits omd::server::params {
+  validate_re($ensure, ['^installed|latest|absent|purged$',
                         '^\d\.\d\d$'])
   validate_re($repo, '^stable|testing$')
 
-  contain 'omd::install'
+  contain 'omd::server::install'
 
 }

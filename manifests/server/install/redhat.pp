@@ -1,5 +1,5 @@
 # (private) install omd for redhat like systems
-class omd::install::redhat {
+class omd::server::install::redhat {
 
   include 'epel'
 
@@ -7,10 +7,10 @@ class omd::install::redhat {
   # architecture irrelevant -> noarch
   package{ 'omd-repository':
     ensure   => latest,
-    name     => "labs-consol-${omd::repo}",
-    source   => "https://labs.consol.de/repo/${omd::repo}/${rhel_ver}/i386/labs-consol-${omd::repo}.${rhel_ver}.noarch.rpm",
+    name     => "labs-consol-${omd::server::repo}",
+    source   => "https://labs.consol.de/repo/${omd::server::repo}/${rhel_ver}/i386/labs-consol-${omd::server::repo}.${rhel_ver}.noarch.rpm",
     provider => rpm,
   }
- 
+
   $default_pkg_name ='omd'
 }

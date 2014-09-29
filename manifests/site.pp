@@ -31,13 +31,13 @@
 #   Site configuration hash, e.g. { 'DEFAULT_GUI' => 'check_mk' , ... }
 #   defaults to _undef_
 #
-# [*config_nodes*]
-#   Collect and configure exported nodes for this site.
+# [*config_clients*]
+#   Collect and configure exported clients for this site.
 #   defaults to _true_
 #
-# [*config_nodes_folder*]
-#   Folder in check_mk where to store automatically collected nodes.
-#   defaults to _collected_nodes_
+# [*config_clients_folder*]
+#   Folder in check_mk where to store automatically collected clients.
+#   defaults to _collected_clients_
 #
 # === Examples
 #
@@ -52,14 +52,14 @@
 # Copyright 2014 Frederik Wagner
 #
 define omd::site  (
-  $ensure              = 'present',
-  $uid                 = undef,
-  $gid                 = undef,
-  $service_ensure      = 'running',
-  $service_reload      = false,
-  $options             = undef,
-  $config_nodes        = true,
-  $config_nodes_folder = 'collected_nodes',
+  $ensure                = 'present',
+  $uid                   = undef,
+  $gid                   = undef,
+  $service_ensure        = 'running',
+  $service_reload        = false,
+  $options               = undef,
+  $config_clients        = true,
+  $config_clients_folder = 'collected_clients',
 ) {
   validate_re($name, '^\w+$')
   validate_re($ensure, '^present|absent$')
@@ -73,10 +73,10 @@ define omd::site  (
   }
   # $service_* validation in omd::service
   # $options validation in omd::config
-  validate_bool($config_nodes)
-  # $config_nodes_* validation in omd::config_nodes
+  validate_bool($config_clients)
+  # $config_clients_* validation in omd::config_clients
 
-  require omd
+  require omd::server
 
   Exec {
     path => ['/bin', '/usr/bin']
@@ -103,9 +103,9 @@ define omd::site  (
       Omd::Site::Service[$name]
     }
 
-    if $config_nodes {
-      omd::site::config_nodes { $name:
-        folder  => $config_nodes_folder,
+    if $config_clients {
+      omd::site::config_clients { $name:
+        folder  => $config_clients_folder,
         require => Omd::Site::Service[$name],
       }
     }

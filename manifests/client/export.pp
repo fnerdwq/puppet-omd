@@ -1,5 +1,5 @@
-# (private) defines an exported node for inclusion in omd checks
-define omd::node::export (
+# (private) defines an exported client for inclusion in omd checks
+define omd::client::export (
   $folder
 ) {
   validate_re($folder, '^\w+$')
