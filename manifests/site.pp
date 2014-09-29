@@ -75,7 +75,7 @@ define omd::site  (
   # $options validation in omd::config
   validate_bool($config_hosts)
 
-  require omd::server
+  include omd::server
 
   Exec {
     path => ['/bin', '/usr/bin']
