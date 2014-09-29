@@ -20,9 +20,17 @@
 #   Binary which does the checks
 #   defaults to _/usr/bin/check_mk_
 #
+# [*hosts*]
+#   Omd::hosts to export, give hash with sitename and options.
+#   defaults to _{ 'default' => {} }_
+#
+# [*hosts_defaults*]
+#   Defaults hash for all hosts to create with $hosts.
+#   defaults to _{}_
+#
 # === Examples
 #
-# include omd
+# include omd::client
 #
 # === Authors
 #
@@ -36,15 +44,20 @@ class omd::client (
   $check_mk_version,
   $check_only_from = $omd::client::params::check_only_from,
   $check_agent     = $omd::client::params::check_agent,
+  $hosts           = $omd::client::params::hosts,
+  $hosts_defaults  = $omd::client::params::hosts_defaults,
 ) inherits omd::client::params {
   validate_string($check_mk_version)
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
+  validate_hash($hosts)
 
   contain omd::client::install
   contain omd::client::config
 
   Class['omd::client::install'] ->
   Class['omd::client::config']
+
+  create_resources('omd::host', $hosts, $hosts_defaults)
 
 }

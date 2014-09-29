@@ -5,7 +5,7 @@ describe 'omd::client' do
   #################################
   # default is Debian environment #
   #################################
-  
+
   let(:default_params) {{
     :check_mk_version => '1.2.4p5-1'
   }}
@@ -86,6 +86,46 @@ describe 'omd::client' do
     context 'with parameter check_agent => brea kme' do
       let(:params) { default_params.merge({ :check_agent => 'brea kme' })}
       it { is_expected.to raise_error(/is not an absolute path/) }
+    end
+
+  end
+
+  describe 'host creation' do
+    it { is_expected.to contain_omd__host('default') }
+
+    context 'with paramter hosts => breakme' do
+      let(:params) { default_params.merge({ :hosts => 'breakme' }) }
+      it { is_expected.to raise_error(/is not a Hash/) }
+    end
+
+    context 'with parameter hosts => { othersite => { folder => otherfolder }, site2 => {} }' do
+      let(:params) do
+        default_params.merge({
+          :hosts => {
+            'othersite' => { 'folder' => 'otherfolder' },
+            'site2'     => {}
+          }
+        })
+      end
+
+      it do
+        is_expected.to contain_omd__host('othersite').with_folder('otherfolder')
+      end
+      it do
+        is_expected.to contain_omd__host('site2')
+      end
+    end
+    context 'with parameter hosts_defaults => { folder => testfolder, tags => [atag] }' do
+      let(:params) do
+        default_params.merge({
+          :hosts_defaults => {
+            'folder' => 'testfolder',
+            'tags'   => ['atag']
+          }
+        })
+      end
+
+      it { is_expected.to contain_omd__host('default').with_folder('testfolder').with_tags(['atag']) }
     end
 
   end
