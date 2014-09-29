@@ -19,7 +19,7 @@ define omd::site::config_hosts {
   }
 
   # get all resources/nodess wich are exported for this site/folder from PuppetDB
-  $num_hosts = count(query_nodes("Class[Omd::Node]{export=true and site=${site} and folder=${folder}}"))
+  $num_hosts = count(query_nodes("Omd::Host[${site}]{folder=${folder}}"))
   file { "${site} site\'s ${folder}/.wato file":
     ensure  => present,
     path    => "${wato_dir}/${folder}/.wato",
