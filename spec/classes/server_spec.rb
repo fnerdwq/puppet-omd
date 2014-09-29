@@ -2,9 +2,13 @@ require 'spec_helper'
 
 describe 'omd::server' do
 
-  #################################
-  # default is Debian environment #
-  #################################
+  # mock function from puppetdbquery
+  # users rspec-puppet-utils MockFunction
+  let!(:query_nodes) { 
+    MockFunction.new('query_nodes') { |f|
+      f.stubs(:call).returns([1,2,3,4])
+    }
+  }
 
   it { is_expected.to contain_class('omd::server::params') }
   it { is_expected.to contain_class('omd::server::install') }
@@ -116,6 +120,40 @@ describe 'omd::server' do
     context 'with parameter testing => testing' do
       let(:params) {{ :repo => 'breakme' }}
       it { is_expected.to raise_error(/does not match/) }
+    end
+
+  end
+
+  describe 'site creation' do
+    it { is_expected.to contain_omd__site('default') }
+
+    context 'with paramter sites => breakme' do
+      let(:params) {{ :sites => 'breakme' }}
+      it { is_expected.to raise_error(/is not a Hash/) }
+    end
+
+    context 'with parameter sites => { othersite => { uid => 678 }, site2 => {} }' do
+      let(:params) {{ 
+        :sites => { 
+          'othersite' => { 'uid' => 678 },
+          'site2'     => {}
+        } 
+      }}
+      it do
+        is_expected.to contain_omd__site('othersite').with_uid(678)
+      end
+      it do
+        is_expected.to contain_omd__site('site2')
+      end
+    end
+    context 'with parameter sites_defaults => { uid => 678, gid => 876 }' do
+      let(:params) {{ 
+        :sites_defaults => { 
+          'uid' => 678,
+          'gid' => 876
+        },
+      }}
+      it { is_expected.to contain_omd__site('default').with_uid(678).with_gid(876) }
     end
 
   end
