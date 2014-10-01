@@ -2,8 +2,9 @@
 #
 # This define creates a OMD site.
 #
-# This works on Debian and RedHat like systems.
-# Puppet Version >= 3.4.0
+# As default alls hosts exported for this site are collected
+# ($config_hosts) for the 'collected_hosts' folder
+# ($collected_hosts_folders).
 #
 # === Parameters
 #
@@ -41,7 +42,9 @@
 #
 # === Examples
 #
-# omd::site { 'default': }
+# omd::site { 'default':
+#   config_hosts_folders => ['myhosts', 'myotherhosts']
+# }
 #
 # === Authors
 #
@@ -75,7 +78,9 @@ define omd::site  (
   # $options validation in omd::config
   validate_bool($config_hosts)
 
+  # cannot require omd::server -> creates cyclic dependency
   include omd::server
+  require omd::server::install
 
   Exec {
     path => ['/bin', '/usr/bin']

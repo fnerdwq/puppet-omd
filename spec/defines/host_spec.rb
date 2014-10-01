@@ -11,7 +11,7 @@ describe 'omd::host' do
   # we need to set the must parameter
   let(:pre_condition) { 'class omd::client { $check_mk_version = "1.2.3" }' }
 
-  it { is_expected.to contain_class('omd::client') } #.that_comes_before('Omd::Host[default]') }
+  it { is_expected.to contain_class('omd::client') }
 
   # external resource cannot be tested...
   
