@@ -2,8 +2,8 @@
 #
 # This class installs and configures omd/check_mk checked client.
 #
-# This works on Debian and RedHat like systems.
-# Puppet Version >= 3.4.0
+# The client can be automatically exporte as omd::host to one or many
+# omd::sites.
 #
 # === Parameters
 #
@@ -30,7 +30,10 @@
 #
 # === Examples
 #
-# include omd::client
+# class { 'omd::client':
+#   check_mk_version => '1.2.4p5-1',
+#   hosts            => { 'site' => { folder => 'myhosts' } }
+# }
 #
 # === Authors
 #

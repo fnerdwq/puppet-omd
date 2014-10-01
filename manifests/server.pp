@@ -2,8 +2,7 @@
 #
 # This class installs and configures omd.
 #
-# This works on Debian and RedHat like systems.
-# Puppet Version >= 3.4.0
+# omd::sites can be directly created.
 #
 # === Parameters
 #
@@ -25,7 +24,13 @@
 #
 # === Examples
 #
-# include omd::server
+# class { 'omd::server':
+#   sites => { 
+#     'mysite' => {
+#       'options' => { 'DEFAULT_GUI' => 'check_mk' } 
+#     }
+#   }
+# }
 #
 # === Authors
 #

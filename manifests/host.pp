@@ -1,9 +1,8 @@
-# == Class: omd::client
+# == Define: omd::host
 #
-# This class installs and configures omd/check_mk checked client.
-#
-# This works on Debian and RedHat like systems.
-# Puppet Version >= 3.4.0
+# This define expots a host to an omd::site.
+# The host ist placed in the given wato folder and takes
+# the listed tags.
 #
 # === Parameters
 #
@@ -11,17 +10,17 @@
 #   Folder in which the hosts are collected (must be created with omd::site)
 #   defaults to _collected_hosts_
 #
-# [*check_only_from*]
-#   Ipadresses/networks that check_mk over xinetd accepps access from.
-#   defaults to _undef_
-#
-# [*check_agent*]
-#   Binary which does the checks
-#   defaults to _/usr/bin/check_mk_
+# [*tags*]
+#   List of additional tags for the host in Check_MK/wato. The hosts alwas
+#   get the 'puppet_generated' tag.
+#   defaults to _[]_
 #
 # === Examples
 #
-# omd::host { 'site_name': }
+# omd::host { 'site_name':
+#   folder => 'myhosts',
+#   tags   => ['tag1', 'tag2'],
+# }
 #
 # === Authors
 #
