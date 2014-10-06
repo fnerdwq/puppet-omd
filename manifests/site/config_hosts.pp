@@ -48,6 +48,8 @@ define omd::site::config_hosts {
     content => "]\n",
   }
 
-  Omd::Host::Export <<| tag == "omd_client_site_${site}_folder_${folder}" |>>
+  Omd::Host::Export <<| tag == "omd_client_site_${site}_folder_${folder}" |>> {
+    notify => Exec["check_mk update site ${site}"],
+  }
 
 }

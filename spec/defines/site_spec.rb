@@ -15,6 +15,14 @@ describe 'omd::site' do
   it { is_expected.to contain_class('omd::server') }
   it { is_expected.to contain_class('omd::server::install').that_comes_before('Omd::Site[default_site]') }
 
+  # generic to trigger
+  it do
+    is_expected.to contain_exec("check_mk update site default_site").with({
+      :command     => "su - default_site -c 'check_mk -O'",
+      :refreshonly => true,
+    })
+  end
+
   context 'with title => break me' do
     let(:title) { 'break me' }
     it { is_expected.to raise_error(/does not match/) }
@@ -106,13 +114,6 @@ describe 'omd::site' do
       is_expected.to contain_omd__site__config_hosts('default_site - collected_hosts')\
         .that_requires( 'Omd::Site::Service[default_site]')
     end
-    it do
-      is_expected.to contain_exec("check_mk update site default_site").with({
-        :command     => "su - default_site -c 'check_mk -O'",
-        :refreshonly => true,
-      }).that_subscribes_to("Omd::Site::Config_hosts[default_site - collected_hosts]")
-    end
-
 
     context 'with parameter config_hosts => false' do
       let(:params) {{ :config_hosts => false }}

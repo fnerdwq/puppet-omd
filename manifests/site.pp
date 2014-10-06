@@ -86,6 +86,12 @@ define omd::site  (
     path => ['/bin', '/usr/bin']
   }
 
+  # generic to trigger
+  exec { "check_mk update site ${name}":
+    command     => "su - ${name} -c 'check_mk -O'",
+    refreshonly => true,
+  }
+
   if $ensure == 'present' {
 
     exec { "create omd site: ${name}":
@@ -114,14 +120,7 @@ define omd::site  (
 
       omd::site::config_hosts { $config_hosts_array:
         require => Omd::Site::Service[$name],
-        notify  => Exec["check_mk update site ${name}"],
       }
-
-      exec { "check_mk update site ${name}":
-        command     => "su - ${name} -c 'check_mk -O'",
-        refreshonly => true,
-      }
-
     }
 
   } else {

@@ -76,9 +76,13 @@ describe 'omd::site::config_hosts' do
     end
   end
 
-  context 'with parmeter folder => break me' do
+  context 'with parameter folder => break me' do
     let(:title) { 'default - break me' }
     it { is_expected.to raise_error(/does not match/) }
+  end
+
+  describe 'node collection' do
+    # exported resources not testable
   end
 
 end
