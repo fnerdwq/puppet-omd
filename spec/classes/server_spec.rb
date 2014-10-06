@@ -10,8 +10,11 @@ describe 'omd::server' do
     }
   }
 
+  let(:facts) {{ :puppet_vardir => '/var/lib/puppet' }}
+
   it { is_expected.to contain_class('omd::server::params') }
   it { is_expected.to contain_class('omd::server::install') }
+  it { is_expected.to contain_class('omd::server::config').that_requires('Class[omd::server::install]') }
 
   describe 'installation' do
 
@@ -122,6 +125,17 @@ describe 'omd::server' do
       it { is_expected.to raise_error(/does not match/) }
     end
 
+  end
+
+  describe 'configuration' do
+    it do
+      is_expected.to contain_file('/var/lib/puppet/omd').with({
+        :ensure => 'directory',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
   end
 
   describe 'site creation' do

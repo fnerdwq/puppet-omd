@@ -58,7 +58,7 @@ class omd::client::check::puppet (
   }
 
   # reinventorize trigger if a MRPE check changed
-  @@file { "${::settings::vardir}/omd/check_puppet_${::fqdn}":
+  @@file { "${::puppet_vardir}/omd/check_puppet_${::fqdn}":
     ensure  => present,
     owner   => root,
     group   => root,
