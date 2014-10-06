@@ -29,9 +29,8 @@ define omd::host::export (
   exec { "check_mk inventorize ${fqdn} for site ${site}":
     command     => "su - ${site} -c 'check_mk -I ${fqdn}'",
     refreshonly => true,
-    subscribe   => Concat[$hosts_file],
+    subscribe   => Concat::Fragment["${site} site's ${folder}/hosts.mk entry for ${fqdn}"],
     before      => Exec["check_mk update site ${site}"],
   }
-
 
 }

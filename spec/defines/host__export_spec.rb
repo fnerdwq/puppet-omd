@@ -40,9 +40,9 @@ describe 'omd::host::export' do
         is_expected.to contain_exec("check_mk inventorize #{param[:fqdn]} for site #{param[:site]}").with({
           :command     => "su - #{param[:site]} -c 'check_mk -I #{param[:fqdn]}'",
           :refreshonly => true
-        })
+        })\
+        .that_subscribes_to("Concat::Fragment[#{param[:site]} site's #{param[:folder]}/hosts.mk entry for #{param[:fqdn]}]")
 # not testable, since only in catlogue of collecting host
-        #.that_subscribes_to("Concat:[#{hosts_file}]")
         #.that_comes_before("Exec[check_mk update site #{param[:site]}")
       end
 
