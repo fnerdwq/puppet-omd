@@ -88,6 +88,23 @@ describe 'omd::client' do
       it { is_expected.to raise_error(/is not an absolute path/) }
     end
 
+
+    it do
+      is_expected.to contain_concat('/etc/check_mk/mrpe.cfg').with({
+        :ensure => 'present',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0644',
+      })
+    end
+    it do
+      is_expected.to contain_concat__fragment('mrpe.cfg header').with({
+        :target  => '/etc/check_mk/mrpe.cfg',
+        :order   => '01',
+        :content => "### Managed by puppet.\n\n",
+      })
+    end
+
   end
 
   describe 'host creation' do

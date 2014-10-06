@@ -6,4 +6,7 @@ class omd::client::params {
   $hosts           = { 'default' => {} }
   $hosts_defaults  = {}
 
+
+  $mrpe_config     = '/etc/check_mk/mrpe.cfg'
+
 }

@@ -10,5 +10,18 @@ class omd::client::config {
     only_from               => $omd::client::check_only_from,
   }
 
+  concat { $omd::client::params::mrpe_config:
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+  }
+
+  concat::fragment { 'mrpe.cfg header':
+    target  => $omd::client::params::mrpe_config,
+    order   => '01',
+    content => "### Managed by puppet.\n\n",
+  }
+
 
 }
