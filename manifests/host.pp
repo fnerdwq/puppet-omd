@@ -42,7 +42,7 @@ define omd::host (
   @@omd::host::export{ "${name} - ${::fqdn}":
     folder => $folder,
     tags   => $tags,
-    tag    => "omd_client_site_${name}_folder_${folder}",
+    tag    => "omd_host_site_${name}_folder_${folder}",
   }
 
 }
