@@ -49,11 +49,23 @@ class omd::client::check::puppet (
     mode   => '0755',
   }
 
+  $content = "Puppet_Agent\t${omd::client::params::plugin_path}/nagios/plugins/check_puppet.rb -w ${warn} -c ${crit} ${options}\n"
   concat::fragment { 'check_puppet':
     target  => $omd::client::params::mrpe_config,
-    content => "Puppet_Agent\t${omd::client::params::plugin_path}/nagios/plugins/check_puppet.rb -w ${warn} -c ${crit} ${options}\n",
+    content => $content,
     order   => '50',
     require => File['check_puppet'],
+  }
+
+  # reinventorize trigger if a MRPE check changed
+  @@file { "${::settings::vardir}/omd/check_puppet_${::fqdn}":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    content => $content,
+    backup  => false,
+    tag     => "omd_client_check_${::fqdn}",
   }
 
 }

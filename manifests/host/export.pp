@@ -32,4 +32,9 @@ define omd::host::export (
     before      => Exec["check_mk update site ${site}"],
   }
 
+  # reinventorize if a collected check throgh MRPE changed
+  File <<| tag == "omd_client_check_${fqdn}" |>> {
+    before => Exec["check_mk inventorize ${fqdn} for site ${site}"],
+  }
+
 }
