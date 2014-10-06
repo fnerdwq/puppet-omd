@@ -22,7 +22,6 @@ define omd::host::export (
   concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn}":
     target  => $hosts_file,
     content => "  \"${content_str}\",\n",
-    backup  => false,
     order   => 10,
   }
 

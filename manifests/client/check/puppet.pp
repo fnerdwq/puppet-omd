@@ -52,7 +52,6 @@ class omd::client::check::puppet (
   concat::fragment { 'check_puppet':
     target  => $omd::client::params::mrpe_config,
     content => "Puppet_Agent\t${omd::client::params::plugin_path}/nagios/plugins/check_puppet.rb -w ${warn} -c ${crit} ${options}\n",
-    backup  => false,
     order   => '50',
     require => File['check_puppet'],
   }
