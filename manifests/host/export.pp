@@ -29,12 +29,11 @@ define omd::host::export (
     command     => "su - ${site} -c 'check_mk -I ${fqdn}'",
     refreshonly => true,
     subscribe   => Concat::Fragment["${site} site's ${folder}/hosts.mk entry for ${fqdn}"],
-    before      => Exec["check_mk update site ${site}"],
   }
 
   # reinventorize if a collected check throgh MRPE changed
   File <<| tag == "omd_client_check_${fqdn}" |>> {
-    before => Exec["check_mk inventorize ${fqdn} for site ${site}"],
+    notify => Exec["check_mk inventorize ${fqdn} for site ${site}"],
   }
 
 }
