@@ -2,7 +2,7 @@
 #
 # This class installs and configures omd/check_mk checked client.
 #
-# The client can be automatically exporte as omd::host to one or many
+# The client can be automatically exported as omd::host to one or many
 # omd::sites.
 #
 # === Parameters

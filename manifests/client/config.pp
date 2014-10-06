@@ -17,11 +17,20 @@ class omd::client::config {
     mode   => '0644',
   }
 
+  # create mrpe.cfg stub
   concat::fragment { 'mrpe.cfg header':
     target  => $omd::client::params::mrpe_config,
     order   => '01',
     content => "### Managed by puppet.\n\n",
   }
 
+  # create dir for plugins
+  $plugin_dirs = prefix(['/nagios', '/nagios/plugins'], $omd::client::params::plugin_path)
+  file { $plugin_dirs:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
 
 }

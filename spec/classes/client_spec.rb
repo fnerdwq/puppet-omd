@@ -90,6 +90,23 @@ describe 'omd::client' do
 
 
     it do
+      is_expected.to contain_file('/usr/local/lib/nagios').with({
+        :ensure => 'directory',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
+    it do
+      is_expected.to contain_file('/usr/local/lib/nagios/plugins').with({
+        :ensure => 'directory',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      })
+    end
+
+    it do
       is_expected.to contain_concat('/etc/check_mk/mrpe.cfg').with({
         :ensure => 'present',
         :owner  => 'root',
