@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe 'omd::client::check::puppet' do
+describe 'omd::client::checks::puppet' do
 
   # we need to set the must parameter
   let(:pre_condition) { 'class omd::client { $check_mk_version = "1.2.3" }' }
 
-  it { is_expected.to contain_class('omd::client::check') }
+  it { is_expected.to contain_class('omd::client::checks') }
 
   it do
     is_expected.to contain_concat__fragment('check_puppet').with({

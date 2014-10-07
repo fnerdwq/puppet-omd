@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'omd::client::check' do
+describe 'omd::client::checks' do
 
   #################################
   # default is Debian environment #
@@ -9,12 +9,12 @@ describe 'omd::client::check' do
   # we need to set the must parameter
   let(:pre_condition) { 'class omd::client { $check_mk_version = "1.2.3" }' }
 
-  it { is_expected.to contain_class('omd::client').that_comes_before('omd::client::check') }
+  it { is_expected.to contain_class('omd::client').that_comes_before('omd::client::checks') }
 
-  it { is_expected.to contain_class('omd::client::check::params') }
-  it { is_expected.to contain_class('omd::client::check::install') }
-  it { is_expected.to contain_class('omd::client::check::config')\
-         .that_requires('omd::client::check::install') }
+  it { is_expected.to contain_class('omd::client::checks::params') }
+  it { is_expected.to contain_class('omd::client::checks::install') }
+  it { is_expected.to contain_class('omd::client::checks::config')\
+         .that_requires('omd::client::checks::install') }
 
   describe 'installation' do
 

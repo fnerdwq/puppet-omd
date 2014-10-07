@@ -1,4 +1,4 @@
-# == Class: omd::client::check
+# == Class: omd::client::checks
 #
 # This class installs and configures extra nagios checks.
 #
@@ -20,14 +20,14 @@
 #
 # Copyright 2014 Frederik Wagner
 #
-class omd::client::check inherits omd::client::check::params {
+class omd::client::checks inherits omd::client::checks::params {
 
   require omd::client
 
-  contain omd::client::check::install
-  contain omd::client::check::config
+  contain omd::client::checks::install
+  contain omd::client::checks::config
 
-  Class['omd::client::check::install'] ->
-  Class['omd::client::check::config']
+  Class['omd::client::checks::install'] ->
+  Class['omd::client::checks::config']
 
 }

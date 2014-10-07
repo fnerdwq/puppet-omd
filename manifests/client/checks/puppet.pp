@@ -1,4 +1,4 @@
-# == Class: omd::client::check::puppet
+# == Class: omd::client::checks::puppet
 #
 # This class installs a puppet agent check over MRPE.
 #
@@ -20,7 +20,7 @@
 #
 # === Examples
 #
-# include omd::client::check::puppet
+# include omd::client::checks::puppet
 #
 # === Authors
 #
@@ -30,7 +30,7 @@
 #
 # Copyright 2014 Frederik Wagner
 #
-class omd::client::check::puppet (
+class omd::client::checks::puppet (
   $warn    = '3600',
   $crit    = '7200',
   $options = '-f',
@@ -39,12 +39,12 @@ class omd::client::check::puppet (
   validate_re($crit, '^\d+$')
   validate_string($options)
 
-  include 'omd::client::check'
+  include 'omd::client::checks'
 
-  $plugin_path = $omd::client::check::params::plugin_path
+  $plugin_path = $omd::client::checks::params::plugin_path
   $content = "Puppet_Agent\t${plugin_path}/nagios/plugins/check_puppet.rb -w ${warn} -c ${crit} ${options}\n"
   concat::fragment { 'check_puppet':
-    target  => $omd::client::check::params::mrpe_config,
+    target  => $omd::client::checks::params::mrpe_config,
     content => $content,
     order   => '50',
     require => File['check_puppet'],
