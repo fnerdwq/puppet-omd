@@ -65,7 +65,8 @@ class omd::client::check::puppet (
     mode    => '0644',
     content => $content,
     backup  => false,
-    tag     => "omd_client_check_${::fqdn}",
+    # server collection and site inventory trigger tags
+    tag     => ['omd_client_checks', "omd_client_check_${::fqdn}"],
   }
 
 }

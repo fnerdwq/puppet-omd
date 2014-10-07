@@ -8,4 +8,8 @@ class omd::server::config {
     mode   => '0755',
   }
 
+  # collect all reinveontorize triggers from alls
+  # managed MRPE checks
+  # (site reload trigger is added in the host export)
+  File <<| tag == 'omd_client_checks' |>>
 }
