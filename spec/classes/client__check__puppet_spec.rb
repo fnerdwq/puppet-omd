@@ -5,18 +5,7 @@ describe 'omd::client::check::puppet' do
   # we need to set the must parameter
   let(:pre_condition) { 'class omd::client { $check_mk_version = "1.2.3" }' }
 
-  it { is_expected.to contain_class('omd::client') }
-  it { is_expected.to contain_class('omd::client::params') }
-
-  it do
-    is_expected.to contain_file("check_puppet").with({
-      :path   => '/usr/local/lib/nagios/plugins/check_puppet.rb',
-      :source => 'puppet:///modules/omd/checks/check_puppet.rb',
-      :owner  => 'root',
-      :group  => 'root',
-      :mode   => '0755',
-    })
-  end
+  it { is_expected.to contain_class('omd::client::check') }
 
   it do
     is_expected.to contain_concat__fragment('check_puppet').with({
@@ -57,5 +46,9 @@ describe 'omd::client::check::puppet' do
     let(:params) {{ :options => {} }}
       it { is_expected.to raise_error(/is not a string/)
     }
+  end
+
+  describe 'reinventorize trigger export' do
+    # not testable for the moment
   end
 end

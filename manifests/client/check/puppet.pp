@@ -39,19 +39,12 @@ class omd::client::check::puppet (
   validate_re($crit, '^\d+$')
   validate_string($options)
 
-  include 'omd::client'
+  include 'omd::client::check'
 
-  file { 'check_puppet':
-    path   => "${omd::client::params::plugin_path}/nagios/plugins/check_puppet.rb",
-    source => 'puppet:///modules/omd/checks/check_puppet.rb',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-  }
-
-  $content = "Puppet_Agent\t${omd::client::params::plugin_path}/nagios/plugins/check_puppet.rb -w ${warn} -c ${crit} ${options}\n"
+  $plugin_path = $omd::client::check::params::plugin_path
+  $content = "Puppet_Agent\t${plugin_path}/nagios/plugins/check_puppet.rb -w ${warn} -c ${crit} ${options}\n"
   concat::fragment { 'check_puppet':
-    target  => $omd::client::params::mrpe_config,
+    target  => $omd::client::check::params::mrpe_config,
     content => $content,
     order   => '50',
     require => File['check_puppet'],
