@@ -31,9 +31,12 @@ define omd::host::export (
     subscribe   => Concat::Fragment["${site} site's ${folder}/hosts.mk entry for ${fqdn}"],
   }
 
-  # reinventorize if a collected check throgh MRPE changed
+  # reinventorize if a collected check throgh MRPE changed,
+  # this has to happen after the hosts.mk has been written, otherwise node might not 
+  # be known
   File <<| tag == "omd_client_check_${fqdn}" |>> {
-    notify => Exec["check_mk inventorize ${fqdn} for site ${site}"],
+    require => Concat[$hosts_file],
+    notify  => Exec["check_mk inventorize ${fqdn} for site ${site}"],
   }
 
 }
