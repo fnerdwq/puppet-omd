@@ -12,11 +12,11 @@
 #
 # [*warn*]
 #   Warn level in seconds
-#   defaults to _3600_
+#   defaults to _2592000_ (30 days)
 #
 # [*crit*]
 #   Critical level in seconds
-#   defaults to _7200_
+#   defaults to _604800_ (7 days)
 #
 # [*options*]
 #   Further options of check (see --help)
@@ -35,8 +35,8 @@
 # Copyright 2014 Frederik Wagner
 #
 define omd::client::checks::cert (
-  $warn    = '3600',
-  $crit    = '7200',
+  $warn    = '2592000',
+  $crit    = '604800',
   $options = '',
 ) {
   validate_re($name, '^[^\s]+$')

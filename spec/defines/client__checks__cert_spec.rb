@@ -11,7 +11,7 @@ describe 'omd::client::checks::cert' do
   it do
     is_expected.to contain_concat__fragment('check_cert__etc_ssl_certs_ssl-cert-snakeoil.pem').with({
       :target  => '/etc/check_mk/mrpe.cfg',
-      :content => "Cert__etc_ssl_certs_ssl-cert-snakeoil.pem\t/usr/local/lib/nagios/plugins/check_cert.rb -w 3600 -c 7200 --cert /etc/ssl/certs/ssl-cert-snakeoil.pem \n",
+      :content => "Cert__etc_ssl_certs_ssl-cert-snakeoil.pem\t/usr/local/lib/nagios/plugins/check_cert.rb -w 2592000 -c 604800 --cert /etc/ssl/certs/ssl-cert-snakeoil.pem \n",
       :order   => '50',
     }).that_requires('File[check_cert]')
   end
@@ -22,7 +22,7 @@ describe 'omd::client::checks::cert' do
 
     it do
       is_expected.to contain_concat__fragment('check_cert_A_Cert.pem').with_content(
-        "Cert_A_Cert.pem\t/usr/local/lib/nagios/plugins/check_cert.rb -w 3600 -c 7200 --cert /path/to/ACert.pem \n")
+        "Cert_A_Cert.pem\t/usr/local/lib/nagios/plugins/check_cert.rb -w 2592000 -c 604800 --cert /path/to/ACert.pem \n")
     end
   end
   context 'parameter name => break me' do
