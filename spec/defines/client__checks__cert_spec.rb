@@ -16,18 +16,18 @@ describe 'omd::client::checks::cert' do
     }).that_requires('File[check_cert]')
   end
 
-  context 'with title => A Cert.pem and parameter name => /path/to/ACert.pem' do
+  context 'with title => A Cert.pem and parameter path => /path/to/ACert.pem' do
     let(:title) { 'A Cert.pem' }
-    let(:params) {{ :name => '/path/to/ACert.pem' }}
+    let(:params) {{ :path => '/path/to/ACert.pem' }}
 
     it do
       is_expected.to contain_concat__fragment('check_cert_A_Cert.pem').with_content(
         "Cert_A_Cert.pem\t/usr/local/lib/nagios/plugins/check_cert.rb -w 2592000 -c 604800 --cert /path/to/ACert.pem \n")
     end
   end
-  context 'parameter name => break me' do
-    let(:params) {{ :name => 'break me' }}
-    it { is_expected.to raise_error(/does not match/) }
+  context 'parameter path => break me' do
+    let(:params) {{ :path => 'break me' }}
+    it { is_expected.to raise_error(/is not an absolute path/) }
   end
 
   context 'with parameter warn => 14400' do
