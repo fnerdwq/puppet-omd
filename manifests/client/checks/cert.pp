@@ -7,8 +7,8 @@
 # === Parameters
 #
 # [*name*]
-#   Name of certificate, where title is used for resource description.
-#   defaults to _$title_
+#   Path to certificate file, whereas title is used for resource
+#   description. defaults to _$title_
 #
 # [*warn*]
 #   Warn level in seconds
@@ -20,7 +20,7 @@
 #
 # [*options*]
 #   Further options of check (see --help)
-#   defaults to _--cert /etc/ssl/certs/ssl-cert-snakeoil.pem_
+#   defaults to _''_
 #
 # === Examples
 #
