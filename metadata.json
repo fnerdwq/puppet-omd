@@ -1,6 +1,6 @@
 {
   "name": "fnerdwq-omd",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Frederik Wagner",
   "summary": "Module to install the Open Monitoring Distribution (Check_MK / Nagios)",
   "license": "Apache License, Version 2.0",
