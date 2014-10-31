@@ -16,6 +16,15 @@ describe 'omd::client' do
 
   describe 'installation' do
 
+    it do
+      is_expected.to contain_file('/etc/check_mk').with({
+        :ensure => 'present',
+        :owner  => 'root',
+        :group  => 'root',
+        :mode   => '0755',
+      }).that_comes_before('Package[check_mk-agent]')
+    end
+
     context 'on Debian like systems' do
       it do
         is_expected.to contain_staging__file('check-mk-agent_1.2.4p5-1_all.deb')\

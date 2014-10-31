@@ -30,11 +30,20 @@ class omd::client::install {
     }
   }
 
+  # some packages (e.g. CentOS 7) do not create directory
+  file { '/etc/check_mk':
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
   package { 'check_mk-agent':
     ensure   => installed,
     name     => $pkg_name,
     source   => $pkg_source,
     provider => $pkg_provider,
+    require  => File['/etc/check_mk'],
   }
 
 }
