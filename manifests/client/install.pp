@@ -32,7 +32,7 @@ class omd::client::install {
 
   # some packages (e.g. CentOS 7) do not create directory
   file { '/etc/check_mk':
-    ensure => present,
+    ensure => directory,
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
