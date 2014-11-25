@@ -18,7 +18,7 @@ describe 'omd::client' do
 
     it do
       is_expected.to contain_file('/etc/check_mk').with({
-        :ensure => 'present',
+        :ensure => 'directory',
         :owner  => 'root',
         :group  => 'root',
         :mode   => '0755',
