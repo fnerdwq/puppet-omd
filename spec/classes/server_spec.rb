@@ -4,7 +4,7 @@ describe 'omd::server' do
 
   # mock function from puppetdbquery
   # users rspec-puppet-utils MockFunction
-  let!(:query_nodes) { 
+  let!(:query_nodes) {
     MockFunction.new('query_nodes') { |f|
       f.stubs(:call).returns([1,2,3,4])
     }
@@ -28,7 +28,7 @@ describe 'omd::server' do
       it { is_expected.to contain_class('omd::server::install::redhat').that_comes_before('Package[omd]') }
       it { is_expected.to contain_class('epel') }
 
-      it do 
+      it do
         is_expected.to contain_package('omd-repository').with({
           :name     => 'labs-consol-stable',
           :source   => 'https://labs.consol.de/repo/stable/rhel6/i386/labs-consol-stable.rhel6.noarch.rpm',
@@ -49,7 +49,7 @@ describe 'omd::server' do
 
       context 'with parameter repo => testing' do
         let(:params) {{ :repo => 'testing' }}
-            
+
         it do
           is_expected.to contain_package('omd-repository').with({
             :name   => 'labs-consol-testing',
@@ -90,7 +90,7 @@ describe 'omd::server' do
             :key         => 'F8C1CA08A57B9ED7',
             :key_content =>  /mI0EThw4TQEEA/,
             :include_src => false,
-          }) 
+          })
         }
       end
 
@@ -125,6 +125,15 @@ describe 'omd::server' do
       it { is_expected.to raise_error(/does not match/) }
     end
 
+    context 'with parameter configure_repo => false' do
+      let(:params) {{ :configure_repo => false }}
+      it { is_expected.not_to contain_apt__source('omd') }
+      it { is_expected.not_to contain_package('omd-repository') }
+    end
+    context 'with parameter configure_repo => breakme' do
+      let(:params) {{ :configure_repo => 'breakme' }}
+      it { is_expected.to raise_error(/is not a boolean/) }
+    end
   end
 
   describe 'configuration' do
@@ -147,11 +156,11 @@ describe 'omd::server' do
     end
 
     context 'with parameter sites => { othersite => { uid => 678 }, site2 => {} }' do
-      let(:params) {{ 
-        :sites => { 
+      let(:params) {{
+        :sites => {
           'othersite' => { 'uid' => 678 },
           'site2'     => {}
-        } 
+        }
       }}
       it do
         is_expected.to contain_omd__site('othersite').with_uid(678)
@@ -161,8 +170,8 @@ describe 'omd::server' do
       end
     end
     context 'with parameter sites_defaults => { uid => 678, gid => 876 }' do
-      let(:params) {{ 
-        :sites_defaults => { 
+      let(:params) {{
+        :sites_defaults => {
           'uid' => 678,
           'gid' => 876
         },
@@ -171,5 +180,6 @@ describe 'omd::server' do
     end
 
   end
+
 
 end

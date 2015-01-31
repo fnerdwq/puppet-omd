@@ -10,6 +10,10 @@
 #   Ensure parameter. Common package 'ensure' or version.
 #   defaults to _installed_
 #
+# [*configure_rep*]
+#   Install omd repository (or have the packages availabe by other means).
+#   defaults to _true_
+#
 # [*repo*]
 #   Which repo to use stable/testing
 #   defaults to _stable_
@@ -25,9 +29,9 @@
 # === Examples
 #
 # class { 'omd::server':
-#   sites => { 
+#   sites => {
 #     'mysite' => {
-#       'options' => { 'DEFAULT_GUI' => 'check_mk' } 
+#       'options' => { 'DEFAULT_GUI' => 'check_mk' }
 #     }
 #   }
 # }
@@ -42,12 +46,14 @@
 #
 class omd::server (
   $ensure         = $omd::server::params::ensure,
+  $configure_repo = $omd::server::params::configure_repo,
   $repo           = $omd::server::params::repo,
   $sites          = $omd::server::params::sites,
   $sites_defaults = $omd::server::params::sites_defaults,
 ) inherits omd::server::params {
   validate_re($ensure, ['^installed|latest|absent|purged$',
                         '^\d\.\d\d$'])
+  validate_bool($configure_repo)
   validate_re($repo, '^stable|testing$')
   validate_hash($sites)
 
