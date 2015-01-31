@@ -69,7 +69,7 @@ describe 'omd::client' do
       let(:params) { default_params.merge({ :download_package => false })}
       it { is_expected.to contain_package('check_mk-agent').without_provider.without_source }
     end
-    context 'with parameter download_package => false' do
+    context 'with parameter download_package => breakme' do
       let(:params) { default_params.merge({ :download_package => 'breakme' })}
       it { is_expected.to raise_error(/is not a boolean/) }
     end
@@ -82,6 +82,7 @@ describe 'omd::client' do
       is_expected.to contain_xinetd__service('check_mk').with({
         :service_type            => 'UNLISTED',
         :port                    => 6556,
+        :disable                 => 'no',
         :server                  => '/usr/bin/check_mk_agent',
         :log_on_success          =>  '',
         :log_on_success_operator => '='
@@ -104,6 +105,15 @@ describe 'omd::client' do
     context 'with parameter check_agent => brea kme' do
       let(:params) { default_params.merge({ :check_agent => 'brea kme' })}
       it { is_expected.to raise_error(/is not an absolute path/) }
+    end
+
+    context 'with parameter xinetd_disable => yes' do
+      let(:params) { default_params.merge({ :xinetd_disable => 'yes' })}
+      it { is_expected.to contain_xinetd__service('check_mk').with_disable('yes') }
+    end
+    context 'with parameter xinetd_disable => breakme' do
+      let(:params) { default_params.merge({ :xinetd_disable => 'breakme' })}
+      it { is_expected.to raise_error(/does not match/) }
     end
 
   end

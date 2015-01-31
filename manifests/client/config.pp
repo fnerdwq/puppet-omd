@@ -4,6 +4,7 @@ class omd::client::config {
   xinetd::service { 'check_mk':
     service_type            => 'UNLISTED',
     port                    => 6556,
+    disable                 => $omd::client::xinetd_disable,
     server                  => $omd::client::check_agent,
     log_on_success          => '',
     log_on_success_operator => '=',

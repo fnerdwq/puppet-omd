@@ -16,6 +16,10 @@
 #   Wether to download package or have it available by other means.
 #   default to _true_
 #
+# [*xinetd_disable*]
+#   Disable check_mk-agent acces via xinetd.
+#   defaults to _no_
+#
 # [*check_only_from*]
 #   Ipadresses/networks that check_mk over xinetd accepps access from.
 #   defaults to _undef_
@@ -50,6 +54,7 @@
 class omd::client (
   $check_mk_version,
   $download_package = $omd::client::params::download_package,
+  $xinetd_disable   = $omd::client::params::xinetd_disable,
   $check_only_from  = $omd::client::params::check_only_from,
   $check_agent      = $omd::client::params::check_agent,
   $hosts            = $omd::client::params::hosts,
@@ -57,6 +62,7 @@ class omd::client (
 ) inherits omd::client::params {
   validate_string($check_mk_version)
   validate_bool($download_package)
+  validate_re($xinetd_disable, ['^yes$','^no$'])
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
   validate_hash($hosts)
