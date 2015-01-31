@@ -1,7 +1,7 @@
 # (private) installs omd::server
 class omd::server::install {
 
-  $osfamily = downcase($osfamily)
+  $osfamily = downcase($::osfamily)
   $install_class = "omd::server::install::${osfamily}"
 
   contain $install_class
