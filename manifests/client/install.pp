@@ -1,33 +1,38 @@
 # (private) installs a omd::client
 class omd::client::install {
 
-  $download_source = 'http://mathias-kettner.de/download'
+  if $omd::client::download_package {
+    $download_source = 'http://mathias-kettner.de/download'
 
-  case $::osfamily {
-    'Debian': {
+    case $::osfamily {
+      'Debian': {
 
-      $filename = "check-mk-agent_${omd::client::check_mk_version}_all.deb"
+        $filename = "check-mk-agent_${omd::client::check_mk_version}_all.deb"
 
-      staging::file { $filename:
-        source => "${download_source}/${filename}",
-        before => Package['check_mk-agent'],
+        staging::file { $filename:
+          source => "${download_source}/${filename}",
+          before => Package['check_mk-agent'],
+        }
+
+        $pkg_source   = "/opt/staging/omd/${filename}"
+        $pkg_provider = 'dpkg'
+        $pkg_name     = 'check-mk-agent'
+
       }
+      'RedHat': {
 
-      $pkg_source   = "/opt/staging/omd/${filename}"
-      $pkg_provider = 'dpkg'
-      $pkg_name     = 'check-mk-agent'
+        $pkg_source   = "${download_source}/check_mk-agent-${omd::client::check_mk_version}.noarch.rpm"
+        $pkg_provider = 'rpm'
+        $pkg_name     = 'check_mk-agent'
 
+      }
+      default: {
+        fail("${::osfamily} not supported")
+      }
     }
-    'RedHat': {
-
-      $pkg_source   = "${download_source}/check_mk-agent-${omd::client::check_mk_version}.noarch.rpm"
-      $pkg_provider = 'rpm'
-      $pkg_name     = 'check_mk-agent'
-
-    }
-    default: {
-      fail("${::osfamily} not supported")
-    }
+  } else {
+    $pkg_source   = undef
+    $pkg_provider = undef
   }
 
   # some packages (e.g. CentOS 7) do not create directory

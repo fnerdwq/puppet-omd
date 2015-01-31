@@ -12,6 +12,10 @@
 #   <https://mathias-kettner.de/check_mk_download.html>, e.g. '1.2.4p5-1'
 #   *MUST*
 #
+# [*download_package*]
+#   Wether to download package or have it available by other means.
+#   default to _true_
+#
 # [*check_only_from*]
 #   Ipadresses/networks that check_mk over xinetd accepps access from.
 #   defaults to _undef_
@@ -45,12 +49,14 @@
 #
 class omd::client (
   $check_mk_version,
-  $check_only_from = $omd::client::params::check_only_from,
-  $check_agent     = $omd::client::params::check_agent,
-  $hosts           = $omd::client::params::hosts,
-  $hosts_defaults  = $omd::client::params::hosts_defaults,
+  $download_package = $omd::client::params::download_package,
+  $check_only_from  = $omd::client::params::check_only_from,
+  $check_agent      = $omd::client::params::check_agent,
+  $hosts            = $omd::client::params::hosts,
+  $hosts_defaults   = $omd::client::params::hosts_defaults,
 ) inherits omd::client::params {
   validate_string($check_mk_version)
+  validate_bool($download_package)
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
   validate_hash($hosts)

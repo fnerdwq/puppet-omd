@@ -65,6 +65,15 @@ describe 'omd::client' do
       it { is_expected.to raise_error(/is not a string/) }
     end
 
+    context 'with parameter download_package => false' do
+      let(:params) { default_params.merge({ :download_package => false })}
+      it { is_expected.to contain_package('check_mk-agent').without_provider.without_source }
+    end
+    context 'with parameter download_package => false' do
+      let(:params) { default_params.merge({ :download_package => 'breakme' })}
+      it { is_expected.to raise_error(/is not a boolean/) }
+    end
+
   end
 
   describe 'configuration' do
