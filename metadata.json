@@ -7,7 +7,7 @@
   "source": "https://github.com/fnerdwq/puppet-omd.git",
   "project_page": "https://github.com/fnerdwq/puppet-omd",
   "issues_url": "https://github.com/fnerdwq/puppet-omd/issues",
-  "description": "Modul to installing the Open Monitoring Distribution OMD",
+  "summary": "Modul to installing the Open Monitoring Distribution OMD",
   "tags": [
     "nagios",
     "omd",
