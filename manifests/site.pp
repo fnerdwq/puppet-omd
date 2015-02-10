@@ -40,6 +40,10 @@
 #   Folders in check_mk where to store and automatically collected hosts to.
 #   defaults to _['collected_hosts']_
 #
+# [*main_mk_content*]
+#   Pass arbitrary content for the Check_mk main.mk config file.
+#   defaults to _undef_
+#
 # === Examples
 #
 # omd::site { 'default':
@@ -63,6 +67,7 @@ define omd::site  (
   $options              = undef,
   $config_hosts         = true,
   $config_hosts_folders = ['collected_hosts'],
+  $main_mk_content      = undef,
 ) {
   validate_re($name, '^\w+$')
   validate_re($ensure, '^present|absent$')
@@ -120,6 +125,19 @@ define omd::site  (
 
       omd::site::config_hosts { $config_hosts_array:
         require => Omd::Site::Service[$name],
+      }
+    }
+
+    if $main_mk_content {
+      validate_string($main_mk_content)
+
+      file { "/omd/sites/${name}/etc/check_mk/main.mk":
+        ensure  => present,
+        owner   => $name,
+        group   => $name,
+        mode    => '0644',
+        content => $main_mk_content,
+        notify  => Exec["check_mk update site ${name}"],
       }
     }
 

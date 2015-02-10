@@ -30,6 +30,7 @@ define omd::host::export (
     refreshonly => true,
     path        => [ '/bin' ],
     subscribe   => Concat::Fragment["${site} site's ${folder}/hosts.mk entry for ${fqdn}"],
+    require     => Concat[$hosts_file],
   }
 
   # add the orderings and reinventorize trigger to the file trigger of the collected

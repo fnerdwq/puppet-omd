@@ -5,7 +5,7 @@ describe 'omd::site' do
 
   # mock function from puppetdbquery
   # users rspec-puppet-utils MockFunction
-  let!(:query_nodes) { 
+  let!(:query_nodes) {
     MockFunction.new('query_nodes') { |f|
       f.stubs(:call).returns([1,2,3,4])
     }
@@ -78,13 +78,30 @@ describe 'omd::site' do
   end
 
   describe 'site configuration' do
-    let(:params) {{ :options => { 'DEFAULT_GUI' => 'check_mk' } }}
+    let(:params) {{
+      :options         => { 'DEFAULT_GUI' => 'check_mk' },
+      :main_mk_content => 'some content'
+    }}
     it do
       is_expected.to contain_omd__site__config('default_site').with_options(
         { 'DEFAULT_GUI' => 'check_mk' })\
       .that_requires('Exec[create omd site: default_site]')\
       .that_notifies('Omd::Site::Service[default_site]')
     end
+
+    it do
+      is_expected.to contain_file('/omd/sites/default_site/etc/check_mk/main.mk').with({
+        :owner   => 'default_site',
+        :group   => 'default_site',
+        :content => /some content/,
+      }).that_notifies('Exec[check_mk update site default_site]')
+    end
+
+    context 'with parameter main_mk_content => [breakme]' do
+      let(:params) {{ :main_mk_content => ['breakme'] }}
+      it { is_expected.to raise_error(/is not a string/) }
+    end
+
   end
 
   describe 'site service' do
