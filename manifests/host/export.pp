@@ -4,7 +4,7 @@ define omd::host::export (
   $tags,
 ) {
   validate_re($folder, '^\w+$')
-  validate_array($tags)
+  # no $tag validation, can be array or string
 
   $splitted_name = split($name, ' - ')
 

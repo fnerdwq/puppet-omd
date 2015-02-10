@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'omd::host::export' do
-  let(:params) {{ 
+  let(:params) {{
     :folder => 'collected_hosts',
     :tags   => [],
   }}
@@ -11,7 +11,7 @@ describe 'omd::host::export' do
 
   [ { :site   => 'default',
       :folder => 'collected_hosts',
-      :tags   => [],
+      :tags   => 'test',
       :fqdn   => 'foo.example.com' },
     { :site   => 'othersite',
       :folder => 'NODES',
@@ -20,7 +20,7 @@ describe 'omd::host::export' do
   ].each do |param|
     context "with values #{param.values.join(', ')}" do
       let(:title) { "#{param[:site]} - #{param[:fqdn]}" }
-      let(:params) {{ 
+      let(:params) {{
         :folder => param[:folder],
         :tags   => param[:tags]
       }}
@@ -60,23 +60,15 @@ describe 'omd::host::export' do
   end
   context 'with broken parameter folder => break me' do
     let(:title) { 'default - foo.example.com' }
-    let(:params) {{ 
+    let(:params) {{
       :folder => 'break me',
       :tags   => ['production', 'germany']
     }}
-    let(:params) {{ 
-      :folder => 'break me', 
+    let(:params) {{
+      :folder => 'break me',
       :tags => []
     }}
     it { is_expected.to raise_error(/does not match/) }
-  end
-  context 'with broken parameter tag => break me' do
-    let(:title) { 'default - foo.example.com' }
-    let(:params) {{ 
-      :folder => 'collected_hosts',
-      :tags   => 'break me'
-    }}
-    it { is_expected.to raise_error(/is not an Array/) }
   end
 
 end
