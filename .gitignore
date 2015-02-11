@@ -11,3 +11,4 @@ coverage/
 spec/fixtures/*
 .vagrant
 pkg/
+.project
