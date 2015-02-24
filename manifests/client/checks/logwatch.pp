@@ -4,7 +4,9 @@
 #
 # === Parameters
 #
-# FIXME
+# [*content*]
+#   Content of check_mk logwatch configuration file.
+#   *MUST*
 #
 # === Examples
 #
