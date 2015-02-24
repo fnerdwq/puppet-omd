@@ -7,23 +7,35 @@ class omd::client::install {
     case $::osfamily {
       'Debian': {
 
-        $filename = "check-mk-agent_${omd::client::check_mk_version}_all.deb"
+        $pkg_agent    = "check-mk-agent_${omd::client::check_mk_version}_all.deb"
+        $pkg_logwatch = "check-mk-agent-logwatch_${omd::client::check_mk_version}_all.deb"
 
-        staging::file { $filename:
-          source => "${download_source}/${filename}",
+        staging::file { $pkg_agent:
+          source => "${download_source}/${pkg_agent}",
           before => Package['check_mk-agent'],
         }
 
-        $pkg_source   = "/opt/staging/omd/${filename}"
-        $pkg_provider = 'dpkg'
-        $pkg_name     = 'check-mk-agent'
+        if $omd::client::logwatch_install {
+
+          staging::file { $pkg_logwatch:
+            source => "${download_source}/${pkg_logwatch}",
+            before => Package['check_mk-agent'],
+          }
+
+        }
+
+        $pkg_source_agent    = "/opt/staging/omd/${pkg_agent}"
+        $pkg_source_logwatch = "/opt/staging/omd/${pkg_logwatch}"
+        $pkg_provider        = 'dpkg'
+        $pkg_name            = 'check-mk-agent'
 
       }
       'RedHat': {
 
-        $pkg_source   = "${download_source}/check_mk-agent-${omd::client::check_mk_version}.noarch.rpm"
-        $pkg_provider = 'rpm'
-        $pkg_name     = 'check_mk-agent'
+        $pkg_source_agent    = "${download_source}/check_mk-agent-${omd::client::check_mk_version}.noarch.rpm"
+        $pkg_source_logwatch = "${download_source}/check_mk-agent-logwatch-${omd::client::check_mk_version}.noarch.rpm"
+        $pkg_provider        = 'rpm'
+        $pkg_name            = 'check_mk-agent'
 
       }
       default: {
@@ -31,24 +43,52 @@ class omd::client::install {
       }
     }
   } else {
-    $pkg_source   = undef
-    $pkg_provider = undef
+    $pkg_source_agent    = undef
+    $pkg_source_logwtach = undef
+    $pkg_provider        = undef
   }
 
   # some packages (e.g. CentOS 7) do not create directory
   file { '/etc/check_mk':
     ensure => directory,
-    owner  => 'root',
-    group  => 'root',
+    owner  => $omd::client::user,
+    group  => $omd::client::group,
     mode   => '0755',
   }
 
   package { 'check_mk-agent':
     ensure   => installed,
     name     => $pkg_name,
-    source   => $pkg_source,
+    source   => $pkg_source_agent,
     provider => $pkg_provider,
     require  => File['/etc/check_mk'],
+  }
+
+  if $omd::client::logwatch_install {
+    # FIXME: update by new OMD Module Version
+    package { 'check_mk-agent-logwatch':
+      ensure   => installed,
+      name     => "${pkg_name}-logwatch",
+      source   => $pkg_source_logwatch,
+      provider => $pkg_provider,
+      require  => File['/etc/check_mk'],
+    }
+
+    file { '/etc/check_mk/logwatch.cfg':
+      ensure  => present,
+      owner   => $omd::client::user,
+      group   => $omd::client::group,
+      mode    => '0644',
+      content => "# Managed by puppet.\n\n# See logwatch.d/*.cfg for configuration.\n",
+    }
+
+    file { '/etc/check_mk/logwatch.d':
+      ensure => directory,
+      owner  => $omd::client::user,
+      group  => $omd::client::group,
+      mode   => '0755',
+    }
+
   }
 
 }

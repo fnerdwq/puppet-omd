@@ -3,8 +3,8 @@ class omd::client::checks::config {
 
   concat { $omd::client::checks::params::mrpe_config:
     ensure => present,
-    owner  => 'root',
-    group  => 'root',
+    owner  => $omd::client::user,
+    group  => $omd::client::group,
     mode   => '0644',
   }
 

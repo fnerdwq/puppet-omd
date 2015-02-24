@@ -39,6 +39,22 @@ describe 'omd::client' do
           :provider => 'dpkg',
         })
       end
+      context 'with parameter logwatch_install => true' do
+        let(:params) { default_params.merge({ :logwatch_install => true })}
+        it do
+          is_expected.to contain_staging__file('check-mk-agent-logwatch_1.2.4p5-1_all.deb')\
+            .with_source('http://mathias-kettner.de/download/check-mk-agent-logwatch_1.2.4p5-1_all.deb')\
+            .that_comes_before('Package[check_mk-agent]')
+        end
+        it do
+          is_expected.to contain_package('check_mk-agent-logwatch').with({
+            :ensure   => 'installed',
+            :name     => 'check-mk-agent-logwatch',
+            :source   => '/opt/staging/omd/check-mk-agent-logwatch_1.2.4p5-1_all.deb',
+            :provider => 'dpkg',
+          })
+        end
+      end
     end
 
     context 'on RedHat like systems' do
@@ -53,6 +69,18 @@ describe 'omd::client' do
           :source   => 'http://mathias-kettner.de/download/check_mk-agent-1.2.4p5-1.noarch.rpm',
           :provider => 'rpm',
         })
+      end
+
+      context 'with parameter logwatch_install => true' do
+        let(:params) { default_params.merge({ :logwatch_install => true })}
+        it do
+          is_expected.to contain_package('check_mk-agent-logwatch').with({
+            :ensure   => 'installed',
+            :name     => 'check_mk-agent-logwatch',
+            :source   => 'http://mathias-kettner.de/download/check_mk-agent-logwatch-1.2.4p5-1.noarch.rpm',
+            :provider => 'rpm',
+          })
+        end
       end
     end
 
@@ -73,6 +101,39 @@ describe 'omd::client' do
       let(:params) { default_params.merge({ :download_package => 'breakme' })}
       it { is_expected.to raise_error(/is not a boolean/) }
     end
+
+    describe 'with parameter logwatch_install => true' do
+      context 'with parameter user => check_user, group => check_group' do
+        let(:params) { default_params.merge({
+          :logwatch_install => true,
+          :user             => 'check_user',
+          :group            => 'check_group',
+        })}
+        it do
+          is_expected.to contain_file('/etc/check_mk/logwatch.cfg').with({
+            :ensure => 'present',
+            :owner  => 'check_user',
+            :group  => 'check_group',
+          })
+        end
+        it do
+          is_expected.to contain_file('/etc/check_mk/logwatch.d').with({
+            :ensure => 'directory',
+            :owner  => 'check_user',
+            :group  => 'check_group',
+          })
+        end
+      end
+    end
+    context 'with parameter user => {}' do
+      let(:params) { default_params.merge({ :user => {} })}
+      it { is_expected.to raise_error(/is not a string/) }
+    end
+    context 'with parameter group => {}' do
+      let(:params) { default_params.merge({ :group => {} })}
+      it { is_expected.to raise_error(/is not a string/) }
+    end
+
 
   end
 

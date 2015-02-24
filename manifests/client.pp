@@ -14,7 +14,11 @@
 #
 # [*download_package*]
 #   Wether to download package or have it available by other means.
-#   default to _true_
+#   defaults to _true_
+#
+# [*logwatch_install*]
+#   Wheter to install logwatch plugin for check_mk-agent.
+#   defaults to _false_
 #
 # [*xinetd_disable*]
 #   Disable check_mk-agent acces via xinetd.
@@ -36,6 +40,14 @@
 #   Defaults hash for all hosts to create with $hosts.
 #   defaults to _{}_
 #
+# [*user*]
+#   User which owns the check_mk-agent config files.
+#   defaults to _root_
+#
+# [*group*]
+#   Group of check_mk-agent config files.
+#   defaults to _root_
+#
 # === Examples
 #
 # class { 'omd::client':
@@ -54,11 +66,14 @@
 class omd::client (
   $check_mk_version,
   $download_package = $omd::client::params::download_package,
+  $logwatch_install = $omd::client::params::logwatch_install,
   $xinetd_disable   = $omd::client::params::xinetd_disable,
   $check_only_from  = $omd::client::params::check_only_from,
   $check_agent      = $omd::client::params::check_agent,
   $hosts            = $omd::client::params::hosts,
   $hosts_defaults   = $omd::client::params::hosts_defaults,
+  $user             = $omd::client::params::user,
+  $group            = $omd::client::params::group,
 ) inherits omd::client::params {
   validate_string($check_mk_version)
   validate_bool($download_package)
@@ -66,6 +81,8 @@ class omd::client (
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
   validate_hash($hosts)
+  validate_string($user)
+  validate_string($group)
 
   contain omd::client::install
   contain omd::client::config
