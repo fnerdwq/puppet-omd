@@ -19,7 +19,7 @@ class omd::client::install {
 
           staging::file { $pkg_logwatch:
             source => "${download_source}/${pkg_logwatch}",
-            before => Package['check_mk-agent'],
+            before => Package['check_mk-agent-logwatch'],
           }
 
         }
@@ -65,13 +65,13 @@ class omd::client::install {
   }
 
   if $omd::client::logwatch_install {
-    # FIXME: update by new OMD Module Version
     package { 'check_mk-agent-logwatch':
       ensure   => installed,
       name     => "${pkg_name}-logwatch",
       source   => $pkg_source_logwatch,
       provider => $pkg_provider,
-      require  => File['/etc/check_mk'],
+      require  => [ Package['check_mk-agent'],
+                    File['/etc/check_mk'], ],
     }
 
     file { '/etc/check_mk/logwatch.cfg':

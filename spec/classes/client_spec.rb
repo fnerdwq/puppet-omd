@@ -44,7 +44,7 @@ describe 'omd::client' do
         it do
           is_expected.to contain_staging__file('check-mk-agent-logwatch_1.2.4p5-1_all.deb')\
             .with_source('http://mathias-kettner.de/download/check-mk-agent-logwatch_1.2.4p5-1_all.deb')\
-            .that_comes_before('Package[check_mk-agent]')
+            .that_comes_before('Package[check_mk-agent-logwatch]')
         end
         it do
           is_expected.to contain_package('check_mk-agent-logwatch').with({
@@ -79,7 +79,7 @@ describe 'omd::client' do
             :name     => 'check_mk-agent-logwatch',
             :source   => 'http://mathias-kettner.de/download/check_mk-agent-logwatch-1.2.4p5-1.noarch.rpm',
             :provider => 'rpm',
-          })
+          }).that_requires('Package[check_mk-agent]')
         end
       end
     end
