@@ -16,11 +16,14 @@
 #
 # [*options*]
 #   Further options of check (see --help)
-#   defaults to _-f_
+#   defaults to _''_
 #
 # === Examples
 #
 # include omd::client::checks::puppet
+#
+# Default checks for last run time. User option -f with custom warn/crit for
+# failures.
 #
 # === Authors
 #
@@ -33,7 +36,7 @@
 class omd::client::checks::puppet (
   $warn    = '3600',
   $crit    = '7200',
-  $options = '-f',
+  $options = '',
 ) {
   validate_re($warn, '^\d+$')
   validate_re($crit, '^\d+$')

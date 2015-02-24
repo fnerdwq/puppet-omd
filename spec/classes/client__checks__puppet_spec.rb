@@ -10,7 +10,7 @@ describe 'omd::client::checks::puppet' do
   it do
     is_expected.to contain_concat__fragment('check_puppet').with({
       :target  => '/etc/check_mk/mrpe.cfg',
-      :content => "Puppet_Agent\t/usr/local/lib/nagios/plugins/check_puppet.rb -w 3600 -c 7200 -f\n",
+      :content => "Puppet_Agent\t/usr/local/lib/nagios/plugins/check_puppet.rb -w 3600 -c 7200 \n",
       :order   => '50',
     }).that_requires('File[check_puppet]')
   end
