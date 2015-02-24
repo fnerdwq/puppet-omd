@@ -39,10 +39,15 @@ describe 'omd::host::export' do
       it do
         is_expected.to contain_exec("check_mk inventorize #{param[:fqdn]} for site #{param[:site]}").with({
           :command     => "su - #{param[:site]} -c 'check_mk -I #{param[:fqdn]}'",
-          :refreshonly => true
+          :path        => ['/bin'],
+          :refreshonly => true,
         })\
         .that_subscribes_to("Concat::Fragment[#{param[:site]} site's #{param[:folder]}/hosts.mk entry for #{param[:fqdn]}]")
-# not testable, since only in catlogue of collecting host
+
+        # FIXME require should be check -> don't get it working!
+        #.that_requires("Concat[#{hosts_file}]")
+
+        # not testable, since only in catlogue of collecting host
         #.that_comes_before("Exec[check_mk update site #{param[:site]}")
       end
 
