@@ -33,18 +33,19 @@ See [Overview](#overview) for now.
 
 ###What omd affects
 
-* On the OMD server the repository from <http://labs.consol.de/> is installed.
+* If enabled, on the OMD server the repository from <http://labs.consol.de/> is installed.
 * Webserver configuration: In case you are using the puppetlabs-apache module
   to purge the non-managed configuration, be sure to include the OMD
-  configuration.
+  configuration!
 * As default the xinetd configuration on the clients is adjusted to allow acces
   to the check\_mk\_agent.
 
 ###Setup Requirements
 
-For ``omd::client`` a specific version of the ``check_mk_agent`` *must* be given (unluckily no default is sensefull). See the download page of the [check\_mk\_agent](https://mathias-kettner.de/check_mk_download.html).
+For ``omd::client`` a specific version of the ``check_mk_agent`` *must* be given, since no generic Packages is downloadable. See the download page of the [check\_mk\_agent](https://mathias-kettner.de/check_mk_download.html).
+If you add the ``check_mk_agent`` package a private repository, you can set this to ``latest``.
 
-###Beginning with omd	
+###Beginning with omd
 
 Installing the server with a default site:
 ```puppet
@@ -69,7 +70,7 @@ omd::site { 'newsite':
   config_hosts_folders => ['important_nodes', 'test_nodes']
 }
 ```
-As default a ``Omd::Site`` is collecting hosts for all the configured folders!
+As default ``Omd::Site`` is collecting hosts for all the configured folders!
 
 To export a client as additional host use
 ```puppet
@@ -82,12 +83,37 @@ This will be collected into the ``important_nodes`` folder in the
 ``newsite`` site. It receives two extra tags. This host could be exported to
 an additional site in an arbitray folder but *not* to the same site again.
 
-**Remark** The best way to create sites and hosts is via the corresponding
-parameters in omd::server and omd::client!
+### Clusters
+For cluster services the nodes in a folder can be put into a cluster - with extra tags
+specified:
+```puppet
+omd::site { 'newsite':
+  config_hosts_folders => {
+    'important_nodes' => {},
+    'clustered_nodes' => {
+      'cluster' => true,
+      'cluster_tags' => [ 'hacluster', 'web' ],
+    },
+  },
+}
+```
+A host has to be defined in the following way, to be actually put into the cluster
+```puppet
+omd::host { 'newsite':
+  folder         => 'clustered_nodes',
+  tags           => ['production', 'important'],
+  cluster_member => true,
+}
+```
+
+
+###Remark
+The best way to create sites and hosts is via the corresponding parameters in
+omd::server and omd::client!
 
 ```puppet
 class { 'omd::server':
-  sites => { 
+  sites => {
     'mysite'    => {},
     'othersite' => {
       'config_hosts_folders' => ['otherfolder'],
@@ -109,16 +135,12 @@ class { 'omd::client':
 
 Explicitly tested on:
 * Debian 7
-* CentOS 6
+* CentOS/RHEL 6
 
 Other Debian and RedHat like systems may/should work.
 
 ##TODOs:
 
-* add distribution of checks (with MRPE)
-* add nagios\_service like behavior
-* host/servicegroups
-* configurable check over ssh instead of xinetd
-* ...
+* ...Suggestions?...
 
 Please open an issue on github if you have any suggestions.

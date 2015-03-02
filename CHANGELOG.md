@@ -1,3 +1,11 @@
+###2015-03-01 - 0.0.4
+
+* added main.mk handling
+* added generic define for mrpe checks
+* added logwatch plugin checks and installation
+* added cluster configuration in folder/host.mk
+* bugfixes
+
 ###2015-01-31 - 0.0.3
 
 * added possiblity to install from local repositories
