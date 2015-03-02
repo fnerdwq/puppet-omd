@@ -1,5 +1,8 @@
 # (private) collects and configures clients in check_mk
-define omd::site::config_hosts {
+define omd::site::config_hosts (
+  $cluster      = false,
+  $cluster_tags = [],
+) {
 
   $splitted_name = split($name, ' - ')
   $site   = $splitted_name[0]
@@ -7,6 +10,9 @@ define omd::site::config_hosts {
 
   validate_re($site, '^\w+$')
   validate_re($folder, '^\w+$')
+
+  validate_bool($cluster)
+  validate_array($cluster_tags)
 
   $wato_dir   = "/omd/sites/${site}/etc/check_mk/conf.d/wato"
   $hosts_file = "${wato_dir}/${folder}/hosts.mk"
@@ -36,20 +42,45 @@ define omd::site::config_hosts {
     mode   => '0660',
   }
 
-  concat::fragment { "${site} site's ${folder}/hosts.mk header":
+  concat::fragment { "${site} site's ${folder}/hosts.mk all_hosts begin":
     target  => $hosts_file,
     order   => '01',
     content => "### Managed by puppet.\n\n_lock='Puppet generated'\n\nall_hosts += [\n",
   }
-    
-  concat::fragment { "${site} site's ${folder}/hosts.mk footer":
+
+  concat::fragment { "${site} site's ${folder}/hosts.mk all_hosts end":
     target  => $hosts_file,
-    order   => '99',
-    content => "]\n",
+    order   => '09',
+    content => "]\n\n",
   }
 
-  Omd::Host::Export <<| tag == "omd_host_site_${site}_folder_${folder}" |>> {
-    notify => Exec["check_mk update site ${site}"],
+  if ! $cluster {
+    # adde multiline column (mieser Trick ;-)
+    concat::fragment { "${site} site's ${folder}/hosts.mk COMMENT OUT clusters begin":
+      target  => $hosts_file,
+      order   => '10',
+      content => "'''\n",
+    }
+    concat::fragment { "${site} site's ${folder}/hosts.mk COMMENT OUT clusters end":
+      target  => $hosts_file,
+      order   => '19',
+      content => "'''\n",
+    }
   }
+
+  $cluster_str = join( flatten([$folder, 'puppet_generated', 'cluster', $cluster_tags]), '|')
+  concat::fragment { "${site} site's ${folder}/hosts.mk clusters begin":
+    target  => $hosts_file,
+    order   => '11',
+    content => "clusters.update({\n\"${cluster_str}\": [\n",
+  }
+
+  concat::fragment { "${site} site's ${folder}/hosts.mk clusters end":
+    target  => $hosts_file,
+    order   => '18',
+    content => "] })\n",
+  }
+
+  Omd::Host::Export <<| tag == "omd_host_site_${site}_folder_${folder}" |>>
 
 }

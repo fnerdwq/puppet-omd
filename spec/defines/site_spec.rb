@@ -17,7 +17,7 @@ describe 'omd::site' do
 
   # generic to trigger
   it do
-    is_expected.to contain_exec("check_mk update site default_site").with({
+    is_expected.to contain_exec("check_mk update site: default_site").with({
       :command     => "su - default_site -c 'check_mk -O'",
       :refreshonly => true,
     })
@@ -94,7 +94,7 @@ describe 'omd::site' do
         :owner   => 'default_site',
         :group   => 'default_site',
         :content => /some content/,
-      }).that_notifies('Exec[check_mk update site default_site]')
+      }).that_notifies('Exec[check_mk update site: default_site]')
     end
 
     context 'with parameter main_mk_content => [breakme]' do
@@ -143,12 +143,46 @@ describe 'omd::site' do
 
     context 'with parameter config_hosts_folders => [folder, otherfolder]' do
       let(:params) {{ :config_hosts_folders => ['folder', 'otherfolder'] }}
-      it { is_expected.to contain_omd__site__config_hosts('default_site - folder') }
-      it { is_expected.to contain_omd__site__config_hosts('default_site - otherfolder') }
+      it {
+        is_expected.to contain_omd__site__config_hosts('default_site - folder')\
+           .that_notifies('Exec[check_mk update site: default_site]')
+      }
+      it {
+        is_expected.to contain_omd__site__config_hosts('default_site - otherfolder')\
+           .that_notifies('Exec[check_mk update site: default_site]')
+      }
     end
+
+    context 'with parameter config_hosts_folders => { :folder => {} , :otherfolder => {} }' do
+      let(:params) {{ :config_hosts_folders => { 'folder' => {} , 'otherfolder' => {} } }}
+      it {
+        is_expected.to contain_omd__site__config_hosts('default_site - folder')\
+           .that_notifies('Exec[check_mk update site: default_site]')
+      }
+      it {
+        is_expected.to contain_omd__site__config_hosts('default_site - otherfolder')\
+           .that_notifies('Exec[check_mk update site: default_site]')
+      }
+    end
+
+    context 'with parameter config_hosts_folders => { :folder => { :cluster => true, :cluster_tags => [one,two]}  }' do
+      let(:params) {{ :config_hosts_folders => {
+        'folder'    => {
+          'cluster'      => true,
+          'cluster_tags' => [ 'one', 'two' ]
+        }
+      } }}
+      it {
+        is_expected.to contain_omd__site__config_hosts('default_site - folder').with({
+          :cluster => true,
+          :cluster_tags => ['one', 'two']
+        }).that_notifies('Exec[check_mk update site: default_site]')
+      }
+    end
+
     context 'with parameter config_hosts_folders => breakme' do
       let(:params) {{ :config_hosts_folders => 'breakme' }}
-      it { is_expected.to raise_error(/is not an Array/) }
+      it { is_expected.to raise_error(/\$config_hosts_folders must be either an Array or Hash/) }
     end
 
 

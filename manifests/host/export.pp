@@ -2,8 +2,10 @@
 define omd::host::export (
   $folder,
   $tags,
+  $cluster_member = false,
 ) {
   validate_re($folder, '^\w+$')
+  validate_bool($cluster_member)
   # no $tag validation, can be array or string
 
   $splitted_name = split($name, ' - ')
@@ -17,19 +19,28 @@ define omd::host::export (
   $wato_dir   = "/omd/sites/${site}/etc/check_mk/conf.d/wato"
   $hosts_file = "${wato_dir}/${folder}/hosts.mk"
 
-  $content_str = join( flatten([$fqdn, 'puppet_generated', $tags]), '|')
+  $content_str = join( flatten([$fqdn, 'puppet_generated', $folder, $tags]), '|')
 
-  concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn}":
+  concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn} (all_hosts)":
     target  => $hosts_file,
     content => "  \"${content_str}\",\n",
-    order   => 10,
+    order   => '05',
+    notify  => Exec["check_mk inventorize ${fqdn} for site ${site}"],
+  }
+
+  if $cluster_member {
+    concat::fragment { "${site} site's ${folder}/hosts.mk entry for ${fqdn} (clusters)":
+      target  => $hosts_file,
+      content => " \"${fqdn}\",\n",
+      order   => '15',
+      notify  => Exec["check_mk inventorize ${fqdn} for site ${site}"],
+    }
   }
 
   exec { "check_mk inventorize ${fqdn} for site ${site}":
     command     => "su - ${site} -c 'check_mk -I ${fqdn}'",
     refreshonly => true,
     path        => [ '/bin' ],
-    subscribe   => Concat::Fragment["${site} site's ${folder}/hosts.mk entry for ${fqdn}"],
     require     => Concat[$hosts_file],
   }
 

@@ -14,7 +14,7 @@ describe 'omd::host' do
   it { is_expected.to contain_class('omd::client') }
 
   # external resource cannot be tested...
-  
+
   describe 'with broken site name (title) => break me' do
     let(:title) { 'break me' }
     it { is_expected.to raise_error(/does not match/) }

@@ -50,6 +50,17 @@
 #   config_hosts_folders => ['myhosts', 'myotherhosts']
 # }
 #
+#  or
+#
+# omd::site { 'default':
+#   config_hosts_folders => {
+#     'myhosts' => {
+#       'cluster' => true,
+#       'clutser_tags' => ['tag1', 'tag2'],
+#     }
+#   }
+# }
+#
 # === Authors
 #
 # Frederik Wagner <wagner@wagit.de>
@@ -92,7 +103,7 @@ define omd::site  (
   }
 
   # generic to trigger
-  exec { "check_mk update site ${name}":
+  exec { "check_mk update site: ${name}":
     command     => "su - ${name} -c 'check_mk -O'",
     refreshonly => true,
   }
@@ -119,12 +130,25 @@ define omd::site  (
     }
 
     if $config_hosts {
-      validate_array($config_hosts_folders)
 
-      $config_hosts_array = prefix($config_hosts_folders, "${name} - ")
+      if is_array($config_hosts_folders) {
+        $config_hosts_array = prefix($config_hosts_folders, "${name} - ")
 
-      omd::site::config_hosts { $config_hosts_array:
-        require => Omd::Site::Service[$name],
+        omd::site::config_hosts { $config_hosts_array:
+          require => Omd::Site::Service[$name],
+          notify  => Exec["check_mk update site: ${name}"],
+        }
+
+      } elsif is_hash($config_hosts_folders) {
+
+        $config_hosts_array = prefix(keys($config_hosts_folders), "${name} - ")
+
+        omd::site::helper::config_hosts { $config_hosts_array:
+          configs => $config_hosts_folders,
+        }
+
+      } else {
+        fail('$config_hosts_folders must be either an Array or Hash')
       }
     }
 
@@ -137,7 +161,7 @@ define omd::site  (
         group   => $name,
         mode    => '0644',
         content => $main_mk_content,
-        notify  => Exec["check_mk update site ${name}"],
+        notify  => Exec["check_mk update site: ${name}"],
       }
     }
 
