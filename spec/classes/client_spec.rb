@@ -55,6 +55,29 @@ describe 'omd::client' do
           })
         end
       end
+
+      context 'with parameter download_package => false' do
+        let(:params) { default_params.merge({ :download_package => false })}
+        it do
+          is_expected.to contain_package('check_mk-agent').with({
+            :ensure   => 'installed',
+            :name     => 'check-mk-agent',
+          }).without_source.without_provider
+        end
+      end
+
+      context 'with parameter download_package => false, logwatch_install => true' do
+        let(:params) { default_params.merge({
+                         :download_package => false,
+                         :logwatch_install => true,
+                      })}
+        it do
+          is_expected.to contain_package('check_mk-agent-logwatch').with({
+            :ensure   => 'installed',
+            :name     => 'check-mk-agent-logwatch',
+          }).without_source.without_provider
+        end
+      end
     end
 
     context 'on RedHat like systems' do
@@ -82,6 +105,30 @@ describe 'omd::client' do
           }).that_requires('Package[check_mk-agent]')
         end
       end
+
+      context 'with parameter download_package => false' do
+        let(:params) { default_params.merge({ :download_package => false })}
+        it do
+          is_expected.to contain_package('check_mk-agent').with({
+            :ensure   => 'installed',
+            :name     => 'check_mk-agent',
+          }).without_source.without_provider
+        end
+      end
+
+      context 'with parameter download_package => false, logwatch_install => true' do
+        let(:params) { default_params.merge({
+                         :download_package => false,
+                         :logwatch_install => true,
+                      })}
+        it do
+          is_expected.to contain_package('check_mk-agent-logwatch').with({
+            :ensure   => 'installed',
+            :name     => 'check_mk-agent-logwatch',
+          }).without_source.without_provider
+        end
+      end
+
     end
 
     context 'with parameter check_mk_version => 1.2.3' do

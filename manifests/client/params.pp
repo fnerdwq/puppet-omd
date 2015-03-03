@@ -12,4 +12,16 @@ class omd::client::params {
   $user             = 'root'
   $group            = 'root'
 
+  case $::osfamily {
+    'Debian': {
+      $pkg_name            = 'check-mk-agent'
+    }
+    'RedHat': {
+      $pkg_name            = 'check_mk-agent'
+    }
+    default: {
+      fail("${::osfamily} not supported")
+    }
+  }
+
 }

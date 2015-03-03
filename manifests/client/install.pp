@@ -27,7 +27,6 @@ class omd::client::install {
         $pkg_source_agent    = "/opt/staging/omd/${pkg_agent}"
         $pkg_source_logwatch = "/opt/staging/omd/${pkg_logwatch}"
         $pkg_provider        = 'dpkg'
-        $pkg_name            = 'check-mk-agent'
 
       }
       'RedHat': {
@@ -35,7 +34,6 @@ class omd::client::install {
         $pkg_source_agent    = "${download_source}/check_mk-agent-${omd::client::check_mk_version}.noarch.rpm"
         $pkg_source_logwatch = "${download_source}/check_mk-agent-logwatch-${omd::client::check_mk_version}.noarch.rpm"
         $pkg_provider        = 'rpm'
-        $pkg_name            = 'check_mk-agent'
 
       }
       default: {
@@ -58,7 +56,7 @@ class omd::client::install {
 
   package { 'check_mk-agent':
     ensure   => installed,
-    name     => $pkg_name,
+    name     => $omd::client::params::pkg_name,
     source   => $pkg_source_agent,
     provider => $pkg_provider,
     require  => File['/etc/check_mk'],
@@ -67,7 +65,7 @@ class omd::client::install {
   if $omd::client::logwatch_install {
     package { 'check_mk-agent-logwatch':
       ensure   => installed,
-      name     => "${pkg_name}-logwatch",
+      name     => "${omd::client::params::pkg_name}-logwatch",
       source   => $pkg_source_logwatch,
       provider => $pkg_provider,
       require  => [ Package['check_mk-agent'],
