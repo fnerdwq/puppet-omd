@@ -1,3 +1,7 @@
+###2015-03-03 - 0.0.5
+
+* bugfix for check_mk-client installation from local repository
+
 ###2015-03-01 - 0.0.4
 
 * added main.mk handling
