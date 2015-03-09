@@ -12,6 +12,10 @@
 #   <https://mathias-kettner.de/check_mk_download.html>, e.g. '1.2.4p5-1'
 #   *MUST*
 #
+# [*package_name*]
+#   Name of Check MK Package override
+#   depends on ::osfamily
+#
 # [*download_package*]
 #   Wether to download package or have it available by other means.
 #   defaults to _true_
@@ -65,6 +69,7 @@
 #
 class omd::client (
   $check_mk_version,
+  $package_name     = $omd::client::params::package_name,
   $download_package = $omd::client::params::download_package,
   $logwatch_install = $omd::client::params::logwatch_install,
   $xinetd_disable   = $omd::client::params::xinetd_disable,
@@ -76,6 +81,7 @@ class omd::client (
   $group            = $omd::client::params::group,
 ) inherits omd::client::params {
   validate_string($check_mk_version)
+  validate_string($package_name)
   validate_bool($download_package)
   validate_re($xinetd_disable, ['^yes$','^no$'])
   validate_string($check_only_from)

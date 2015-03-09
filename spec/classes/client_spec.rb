@@ -149,6 +149,20 @@ describe 'omd::client' do
       it { is_expected.to raise_error(/is not a boolean/) }
     end
 
+    context 'with parameter package_name => test-name' do
+      let(:params) { default_params.merge({ :package_name => 'test-name' })}
+      it do
+        is_expected.to contain_package('check_mk-agent').with({
+          :ensure   => 'installed',
+          :name     => 'test-name',
+        })
+      end
+    end
+    context 'with parameter package_name => [breakme]' do
+      let(:params) { default_params.merge({ :package_name => ['breakme'] })}
+      it { is_expected.to raise_error(/is not a string/) }
+    end
+
     describe 'with parameter logwatch_install => true' do
       context 'with parameter user => check_user, group => check_group' do
         let(:params) { default_params.merge({

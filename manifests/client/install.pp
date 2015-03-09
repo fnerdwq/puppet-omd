@@ -56,7 +56,7 @@ class omd::client::install {
 
   package { 'check_mk-agent':
     ensure   => installed,
-    name     => $omd::client::params::pkg_name,
+    name     => $omd::client::package_name,
     source   => $pkg_source_agent,
     provider => $pkg_provider,
     require  => File['/etc/check_mk'],
@@ -65,7 +65,7 @@ class omd::client::install {
   if $omd::client::logwatch_install {
     package { 'check_mk-agent-logwatch':
       ensure   => installed,
-      name     => "${omd::client::params::pkg_name}-logwatch",
+      name     => "${omd::client::package_name}-logwatch",
       source   => $pkg_source_logwatch,
       provider => $pkg_provider,
       require  => [ Package['check_mk-agent'],
