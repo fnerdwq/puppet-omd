@@ -1,6 +1,7 @@
 # (private) defaults for omd::client
 class omd::client::params {
 
+  $download_source  = 'http://mathias-kettner.de/download'
   $download_package = true
   $logwatch_install = false
   $xinetd_disable   = 'no'

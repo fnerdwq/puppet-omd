@@ -12,6 +12,10 @@
 #   <https://mathias-kettner.de/check_mk_download.html>, e.g. '1.2.4p5-1'
 #   *MUST*
 #
+# [*download_source*]
+#   Source to download check_mk-agent package.
+#   defaults to _http://mathias-kettner.de/download_
+# 
 # [*package_name*]
 #   Name of Check MK Package override
 #   depends on ::osfamily
@@ -70,7 +74,8 @@
 class omd::client (
   $check_mk_version,
   $package_name     = $omd::client::params::package_name,
-  $download_package = $omd::client::params::download_package,
+  $download_package = $moni::client::params::download_package,
+  $download_source  = $omd::client::params::download_source,
   $logwatch_install = $omd::client::params::logwatch_install,
   $xinetd_disable   = $omd::client::params::xinetd_disable,
   $check_only_from  = $omd::client::params::check_only_from,
@@ -83,6 +88,7 @@ class omd::client (
   validate_string($check_mk_version)
   validate_string($package_name)
   validate_bool($download_package)
+  validate_bool($download_source)
   validate_re($xinetd_disable, ['^yes$','^no$'])
   validate_string($check_only_from)
   validate_absolute_path($check_agent)
