@@ -2,7 +2,7 @@
 class omd::client::install {
 
   if $omd::client::download_package {
-    $download_source = 'http://mathias-kettner.de/download'
+    $download_source = "${omd::client::download_source}"
 
     case $::osfamily {
       'Debian': {

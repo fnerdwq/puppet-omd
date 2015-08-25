@@ -2,6 +2,7 @@
 class omd::client::params {
 
   $download_package = true
+  $download_source  = 'http://mathias-kettner.de/download'
   $logwatch_install = false
   $xinetd_disable   = 'no'
   $check_only_from  = undef

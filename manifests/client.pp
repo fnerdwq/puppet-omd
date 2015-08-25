@@ -69,6 +69,7 @@
 #
 class omd::client (
   $check_mk_version,
+  $download_source  = $omd::client::params::download_source,
   $package_name     = $omd::client::params::package_name,
   $download_package = $omd::client::params::download_package,
   $logwatch_install = $omd::client::params::logwatch_install,
