@@ -1,3 +1,8 @@
+###2015-08-28 - 0.0.6
+
+* update for puppetlabs/apt module version 2+
+* added new parameter download_source for client
+
 ###2015-03-03 - 0.0.5
 
 * bugfix for check_mk-client installation from local repository
