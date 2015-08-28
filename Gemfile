@@ -6,7 +6,7 @@ group :development, :test do
   gem 'puppet-lint', '> 1.0.0'
 
   gem 'rspec', '< 3.0.0'
-  gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet'
+  gem 'rspec-puppet', '~> 2.0.0'
   gem 'puppetlabs_spec_helper'
   gem 'rspec-puppet-utils'
 
