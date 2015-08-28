@@ -70,9 +70,9 @@ describe 'omd::server' do
             :location    => 'http://labs.consol.de/repo/stable/debian',
             :release     => 'wheezy',
             :repos       => 'main',
-            :key         => 'F8C1CA08A57B9ED7',
-            :key_content => /mI0EThw4TQEEA/,
-            :include_src => false,
+            :key         => { :id => 'F2F97737B59ACCC92C23F8C7F8C1CA08A57B9ED7',
+                              :content => /mI0EThw4TQEEA/
+                            },
           })
         }
       end
@@ -87,9 +87,9 @@ describe 'omd::server' do
             :location    => 'http://labs.consol.de/repo/stable/ubuntu',
             :release     => 'trusty',
             :repos       => 'main',
-            :key         => 'F8C1CA08A57B9ED7',
-            :key_content =>  /mI0EThw4TQEEA/,
-            :include_src => false,
+            :key         => { :id => 'F2F97737B59ACCC92C23F8C7F8C1CA08A57B9ED7',
+                              :content => /mI0EThw4TQEEA/,
+                            },
           })
         }
       end

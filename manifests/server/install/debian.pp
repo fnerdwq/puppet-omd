@@ -6,14 +6,14 @@ class omd::server::install::debian {
 
     $os = downcase($::operatingsystem)
     apt::source { 'omd':
-      location    => "http://labs.consol.de/repo/${omd::server::repo}/${os}",
-      release     => $::lsbdistcodename,
-      repos       => 'main',
-      key         => 'F8C1CA08A57B9ED7',
-      # only possible from puppet 3.7
-      #key_content => files('omd/labs.consol.de.pgp.key'),
-      key_content => template('omd/labs.consol.de.pgp.key'),
-      include_src => false,
+      location => "http://labs.consol.de/repo/${omd::server::repo}/${os}",
+      release  => $::lsbdistcodename,
+      repos    => 'main',
+      key      => {
+        'id'      => 'F2F97737B59ACCC92C23F8C7F8C1CA08A57B9ED7',
+        # only possible from puppet 3.7: key_content => files('omd/labs.consol.de.pgp.key')
+        'content' => template('omd/labs.consol.de.pgp.key')
+      },
     }
   }
 
