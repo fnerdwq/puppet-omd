@@ -31,6 +31,7 @@ describe 'omd::client' do
           .with_source('http://mathias-kettner.de/download/check-mk-agent_1.2.4p5-1_all.deb')\
           .that_comes_before('Package[check_mk-agent]')
       end
+
       it do
         is_expected.to contain_package('check_mk-agent').with({
           :ensure   => 'installed',
@@ -39,6 +40,7 @@ describe 'omd::client' do
           :provider => 'dpkg',
         })
       end
+
       context 'with parameter logwatch_install => true' do
         let(:params) { default_params.merge({ :logwatch_install => true })}
         it do
@@ -53,6 +55,23 @@ describe 'omd::client' do
             :source   => '/opt/staging/omd/check-mk-agent-logwatch_1.2.4p5-1_all.deb',
             :provider => 'dpkg',
           })
+        end
+      end
+
+      context 'with parameter download_source=> http://localhost, logwatch_install => true' do
+        let(:params) { default_params.merge({
+                         :download_source  => 'http://localhost',
+                         :logwatch_install => true
+                         })}
+        it do
+          is_expected.to contain_staging__file('check-mk-agent_1.2.4p5-1_all.deb')\
+            .with_source('http://localhost/check-mk-agent_1.2.4p5-1_all.deb')\
+            .that_comes_before('Package[check_mk-agent]')
+        end
+        it do
+          is_expected.to contain_staging__file('check-mk-agent-logwatch_1.2.4p5-1_all.deb')\
+            .with_source('http://localhost/check-mk-agent-logwatch_1.2.4p5-1_all.deb')\
+            .that_comes_before('Package[check_mk-agent-logwatch]')
         end
       end
 
@@ -106,6 +125,29 @@ describe 'omd::client' do
         end
       end
 
+      context 'with parameter download_source=> http://localhost, logwatch_install => true' do
+        let(:params) { default_params.merge({
+                         :download_source  => 'http://localhost',
+                         :logwatch_install => true
+                         })}
+        it do
+          is_expected.to contain_package('check_mk-agent').with({
+            :ensure   => 'installed',
+            :name     => 'check_mk-agent',
+            :source   => 'http://localhost/check_mk-agent-1.2.4p5-1.noarch.rpm',
+            :provider => 'rpm',
+          })
+        end
+        it do
+          is_expected.to contain_package('check_mk-agent-logwatch').with({
+            :ensure   => 'installed',
+            :name     => 'check_mk-agent-logwatch',
+            :source   => 'http://localhost/check_mk-agent-logwatch-1.2.4p5-1.noarch.rpm',
+            :provider => 'rpm',
+          }).that_requires('Package[check_mk-agent]')
+        end
+      end
+
       context 'with parameter download_package => false' do
         let(:params) { default_params.merge({ :download_package => false })}
         it do
@@ -137,6 +179,11 @@ describe 'omd::client' do
     end
     context 'with parameter check_mk_version => [breakme]' do
       let(:params) {{ :check_mk_version => ['breakme'] }}
+      it { is_expected.to raise_error(/is not a string/) }
+    end
+
+    context 'with parameter download_source => [ breakme ]' do
+      let(:params) { default_params.merge({ :download_source => ['breakme'] })}
       it { is_expected.to raise_error(/is not a string/) }
     end
 

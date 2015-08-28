@@ -16,8 +16,12 @@
 #   Name of Check MK Package override
 #   depends on ::osfamily
 #
+# [*download_source*]
+#   Where to download the install package from.
+#   defaults to _http://mathias-kettner.de/download_
+#
 # [*download_package*]
-#   Wether to download package or have it available by other means.
+#   Whether to download package or have it available by other means.
 #   defaults to _true_
 #
 # [*logwatch_install*]
@@ -69,8 +73,8 @@
 #
 class omd::client (
   $check_mk_version,
-  $download_source  = $omd::client::params::download_source,
   $package_name     = $omd::client::params::package_name,
+  $download_source  = $omd::client::params::download_source,
   $download_package = $omd::client::params::download_package,
   $logwatch_install = $omd::client::params::logwatch_install,
   $xinetd_disable   = $omd::client::params::xinetd_disable,
@@ -83,6 +87,7 @@ class omd::client (
 ) inherits omd::client::params {
   validate_string($check_mk_version)
   validate_string($package_name)
+  validate_string($download_source)
   validate_bool($download_package)
   validate_re($xinetd_disable, ['^yes$','^no$'])
   validate_string($check_only_from)
