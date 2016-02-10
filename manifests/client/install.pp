@@ -42,7 +42,7 @@ class omd::client::install {
     }
   } else {
     $pkg_source_agent    = undef
-    $pkg_source_logwtach = undef
+    $pkg_source_logwatch = undef
     $pkg_provider        = undef
   }
 
