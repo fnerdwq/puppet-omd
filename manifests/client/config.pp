@@ -5,7 +5,8 @@ class omd::client::config {
   # (which uses params class in parameters)
   include 'xinetd'
 
-  xinetd::service { 'check_mk':
+  # FIXME this was 'check_mk' -> when did it change?
+  xinetd::service { 'check-mk-agent':
     service_type            => 'UNLISTED',
     port                    => 6556,
     disable                 => $omd::client::xinetd_disable,
