@@ -17,7 +17,11 @@
 require 'optparse'
 require 'yaml'
 
+<% if scope.function_versioncmp([@serverversion, '4']) >= 0 -%>
 statedir = "/opt/puppetlabs/puppet/cache/state"
+<% else -%>
+statedir = "/var/lib/puppet/state"
+<% end -%>
 agent_lockfile = statedir + "/agent_catalog_run.lock"
 agent_disabled_lockfile = statedir + "/agent_disabled.lock"
 statefile = statedir + "/state.yaml"

@@ -17,8 +17,8 @@ class omd::client::checks::install {
 
   # install checks
   file { 'check_puppet':
-    path   => "${plugin_path}/nagios/plugins/check_puppet.rb",
-    source => 'puppet:///modules/omd/checks/check_puppet.rb',
+    path    => "${plugin_path}/nagios/plugins/check_puppet.rb",
+    content => template('omd/checks/check_puppet.rb.erb'),
   }
 
   file { 'check_cert':
