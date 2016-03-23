@@ -42,7 +42,7 @@ define omd::client::checks::mrpe (
 
   $content = "${name}\t${path} ${options}\n"
   concat::fragment { "check_mrpe_${name}":
-    target  => $omd::client::checks::params::mrpe_config,
+    target  => $omd::client::params::mrpe_config,
     content => $content,
     order   => '50',
   }

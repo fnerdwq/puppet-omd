@@ -20,7 +20,7 @@
 #
 # Copyright 2014 Frederik Wagner
 #
-class omd::client::checks inherits omd::client::checks::params {
+class omd::client::checks {
 
   require omd::client
 

@@ -1,6 +1,10 @@
 # (private) defaults for omd::client
 class omd::client::params {
 
+  $conf_dir         = '/etc/check_mk'
+  $mrpe_config      = "${conf_dir}/mrpe.cfg"
+  $plugin_path      = '/usr/local/lib'
+
   $download_package = true
   $download_source  = 'http://mathias-kettner.de/download'
   $logwatch_install = false

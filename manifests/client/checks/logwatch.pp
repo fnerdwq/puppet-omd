@@ -36,7 +36,7 @@ define omd::client::checks::logwatch (
     fail('$logwatch_install on omd::client must be true!')
   }
 
-  file { "/etc/check_mk/logwatch.d/${name}.cfg":
+  file { "${omd::client::conf_dir}/logwatch.d/${name}.cfg":
     ensure  => present,
     owner   => $omd::client::user,
     group   => $omd::client::group,

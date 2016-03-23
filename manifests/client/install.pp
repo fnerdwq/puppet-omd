@@ -47,7 +47,7 @@ class omd::client::install {
   }
 
   # some packages (e.g. CentOS 7) do not create directory
-  file { '/etc/check_mk':
+  file { $omd::client::conf_dir:
     ensure => directory,
     owner  => $omd::client::user,
     group  => $omd::client::group,
@@ -59,7 +59,7 @@ class omd::client::install {
     name     => $omd::client::package_name,
     source   => $pkg_source_agent,
     provider => $pkg_provider,
-    require  => File['/etc/check_mk'],
+    require  => File[$omd::client::conf_dir],
   }
 
   if $omd::client::logwatch_install {
@@ -69,10 +69,10 @@ class omd::client::install {
       source   => $pkg_source_logwatch,
       provider => $pkg_provider,
       require  => [ Package['check_mk-agent'],
-                    File['/etc/check_mk'], ],
+                    File[$omd::client::conf_dir], ],
     }
 
-    file { '/etc/check_mk/logwatch.cfg':
+    file { "${omd::client::conf_dir}/logwatch.cfg":
       ensure  => present,
       owner   => $omd::client::user,
       group   => $omd::client::group,
@@ -80,7 +80,7 @@ class omd::client::install {
       content => "# Managed by puppet.\n\n# See logwatch.d/*.cfg for configuration.\n",
     }
 
-    file { '/etc/check_mk/logwatch.d':
+    file { "${omd::client::conf_dir}/logwatch.d":
       ensure => directory,
       owner  => $omd::client::user,
       group  => $omd::client::group,

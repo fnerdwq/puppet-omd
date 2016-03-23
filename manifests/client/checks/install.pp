@@ -1,7 +1,7 @@
 # (private) install checks
 class omd::client::checks::install {
 
-  $plugin_path = $omd::client::checks::params::plugin_path
+  $plugin_path = $omd::client::params::plugin_path
 
   File {
     owner  => 'root',
