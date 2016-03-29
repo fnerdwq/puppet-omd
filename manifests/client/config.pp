@@ -5,8 +5,10 @@ class omd::client::config {
   # (which uses params class in parameters)
   include 'xinetd'
 
-  # FIXME this was 'check_mk' -> when did it change?
-  xinetd::service { 'check-mk-agent':
+  # !!! the EPEL repackaged check-mk-agent renames everythings
+  # stay with the original
+  file { '/etc/xinetd.d/check-mk-agent': ensure => absent }
+  xinetd::service { 'check_mk':
     service_type            => 'UNLISTED',
     port                    => 6556,
     disable                 => $omd::client::xinetd_disable,
