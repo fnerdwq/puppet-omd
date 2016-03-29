@@ -26,6 +26,10 @@
 #   Defaults hash for all site to create with $sites.
 #   defaults to _{}_
 #
+# [*package_name*]
+#   Package name to user fore the server.
+#   defaults to _undef_ (automatically determined)
+#
 # === Examples
 #
 # class { 'omd::server':
@@ -50,12 +54,16 @@ class omd::server (
   $repo           = $omd::server::params::repo,
   $sites          = $omd::server::params::sites,
   $sites_defaults = $omd::server::params::sites_defaults,
+  $package_name   = $omd::server::params::package_name,
 ) inherits omd::server::params {
   validate_re($ensure, ['^installed|latest|absent|purged$',
                         '^\d\.\d\d$'])
   validate_bool($configure_repo)
   validate_re($repo, '^stable|testing$')
   validate_hash($sites)
+  if $package_name {
+    validate_string($package_name)
+  }
 
   contain 'omd::server::install'
   contain 'omd::server::config'

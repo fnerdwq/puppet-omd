@@ -6,5 +6,6 @@ class omd::server::params {
   $repo            = 'stable'
   $sites           = { 'default' => {} }
   $sites_defaults  = {}
+  $package_name    = undef
 
 }
