@@ -7,7 +7,7 @@ class omd::server::install {
   contain $install_class
 
   case $omd::server::ensure {
-    /\d\.\d\d/: {
+    /\d\.\d.*/: {
       $pkg_ensure = 'present'
       if $omd::server::package_name {
         $pkg_name = "${omd::server::package_name}-${omd::server::ensure}"
