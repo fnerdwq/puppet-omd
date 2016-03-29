@@ -57,7 +57,7 @@ class omd::server (
   $package_name   = $omd::server::params::package_name,
 ) inherits omd::server::params {
   validate_re($ensure, ['^installed|latest|absent|purged$',
-                        '^\d\.\d\d$'])
+                        '^\d\.\d.*$'])
   validate_bool($configure_repo)
   validate_re($repo, '^stable|testing$')
   validate_hash($sites)
